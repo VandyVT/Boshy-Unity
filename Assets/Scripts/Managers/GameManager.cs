@@ -36,6 +36,8 @@ public class GameManager : MonoBehaviour
                 }
                 break;
         }
+
+        LoadFromMenu();
     }
 
     private void Update()
@@ -134,6 +136,38 @@ public class GameManager : MonoBehaviour
 
             Debug.Log("Player position loaded: " + PlayerCharacter.instance.transform.position);
         }
+
+        else
+        {
+            Debug.Log("No saved player data found. Using default position.");
+        }
+    }
+
+
+    public void LoadFromMenu()
+    {
+        // Get the file path in StreamingAssets
+        string filePath = (Application.persistentDataPath + "/playerData.json");
+
+        // Check if the file exists
+        if (File.Exists(filePath))
+        {
+            // Read JSON data from the file
+            string jsonData = File.ReadAllText(filePath);
+
+            // Parse JSON data
+            JSONObject playerData = JSON.Parse(jsonData) as JSONObject;
+
+            // Retrieve player position
+            float x = playerData["position"]["x"].AsFloat;
+            float y = playerData["position"]["y"].AsFloat;
+
+            // Set player position
+            PlayerCharacter.instance.transform.position = new Vector2(x, y);
+
+            Debug.Log("Player position loaded: " + PlayerCharacter.instance.transform.position);
+        }
+
         else
         {
             Debug.Log("No saved player data found. Using default position.");

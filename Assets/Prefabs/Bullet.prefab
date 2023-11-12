@@ -68,6 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43fa0fb9125748e4c945cded5ab95b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bulletSpr: {fileID: 1589401612516067938}
 --- !u!61 &5775915569877173922
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -166,7 +167,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: dd6d990144b93634d9d5e9cb65482b3b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

@@ -77,8 +77,6 @@ public class PlayerCharacter : MonoBehaviour
         {
             _rb = GetComponent<Rigidbody2D>();
         }
-
-        Restart();
     }
 
     // Update is called once per frame
