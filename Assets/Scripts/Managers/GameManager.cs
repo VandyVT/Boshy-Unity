@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        Screen.fullScreen = false;
     }
 
     void Start()
