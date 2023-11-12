@@ -88,7 +88,8 @@ public class GameManager : MonoBehaviour
 
     public void SavePlayerPosition()
     {
-        debugText.text += ("Starting save operation to " + Application.dataPath);
+        debugText.text = "";
+        debugText.text += ("Starting save operation to " + Application.persistentDataPath);
 
         // Create JSON object
         JSONObject playerData = new JSONObject();
@@ -96,7 +97,7 @@ public class GameManager : MonoBehaviour
         playerData["position"]["y"].AsFloat = PlayerCharacter.instance.transform.position.y;
 
         // Get the file path in StreamingAssets
-        string filePath = (Application.dataPath + "/playerData.json");
+        string filePath = (Application.persistentDataPath + "/playerData.json");
 
         // Write JSON data to the file
         File.WriteAllText(filePath, playerData.ToString());
@@ -104,15 +105,15 @@ public class GameManager : MonoBehaviour
         Debug.Log("Player position saved!");
 
         //CODE
-        debugText.text += ("Data saved to: " + Application.dataPath);
+        debugText.text += ("Data saved to: " + Application.persistentDataPath);
 
-        if (!File.Exists(Application.dataPath + "/playerData.json")) debugText.text += "\nEXCEPT NOT REALLY!!";
+        if (!File.Exists(Application.persistentDataPath + "/playerData.json")) debugText.text += "\nEXCEPT NOT REALLY!!";
     }
 
     public void LoadPlayerPosition()
     {
         // Get the file path in StreamingAssets
-        string filePath = (Application.dataPath + "/playerData.json");
+        string filePath = (Application.persistentDataPath + "/playerData.json");
 
         // Check if the file exists
         if (File.Exists(filePath))
