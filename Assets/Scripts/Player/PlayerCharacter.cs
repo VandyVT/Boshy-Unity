@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using TMPro;
 using UnityEngine;
 
 public class PlayerCharacter : MonoBehaviour
@@ -38,6 +39,10 @@ public class PlayerCharacter : MonoBehaviour
     private int currentBulletCount = 0;
 
     public LayerMask groundLayer;  // You may need to adjust the ground layer
+
+    public string[] deathTexts;
+    public TextMeshPro deathText;
+    [SerializeField] Transform deathTextPos;
 
     bool onPlatform;
     bool owater;
@@ -77,6 +82,8 @@ public class PlayerCharacter : MonoBehaviour
         {
             _rb = GetComponent<Rigidbody2D>();
         }
+
+        deathText.text = "";
     }
 
     // Update is called once per frame
@@ -156,8 +163,7 @@ public class PlayerCharacter : MonoBehaviour
     void Jump()
     {
         // Check for ground or platform collision
-        float raycastWidth = transform.localScale.x; // Use the X scale of the transform as the raycast width
-        grounded = Physics2D.Raycast(transform.position, Vector2.down, 0.25f, groundLayer);
+        grounded = _rb.velocity.y == 0.0f;
 
         if (grounded)
         {
@@ -313,14 +319,14 @@ public class PlayerCharacter : MonoBehaviour
         float randomSpeed = Random.Range(0.75f, 1.25f);
 
         // Get a random index within the array length
-        int randomIndex = Random.Range(0, _deathClips.Length);
+        int randomIndex = Random.Range(0, deathTexts.Length);
 
-        // Select the random audio clip
-        AudioClip randomClip = _deathClips[randomIndex];
+        // Select the random text
+        string randomText = deathTexts[randomIndex];
 
         // Set the pitch and play the audio clip
         _playerAudio.pitch = randomSpeed;
-        _playerAudio.PlayOneShot(randomClip);
+        _playerAudio.PlayOneShot(_deathClips[randomIndex]); // Assuming _deathClips is your array of AudioClips
 
         if (_bloodPrefab != null)
         {
@@ -328,6 +334,14 @@ public class PlayerCharacter : MonoBehaviour
             bloodInstance = Instantiate(_bloodPrefab, transform.position, transform.rotation);
         }
 
+        // Set TMPro text to the selected string
+        deathText.text = randomText;
+        deathText.transform.position = deathTextPos.position;
+
+        // Start coroutine for the shake effect
+        StartCoroutine(ShakeText());
+
+        // Other game over actions
         GameManager.Instance.GameOver();
 
         _playerSprite.SetActive(false);
@@ -335,6 +349,31 @@ public class PlayerCharacter : MonoBehaviour
         _rb.bodyType = RigidbodyType2D.Static;
         PlayerCharacter playerScript = this.GetComponent<PlayerCharacter>();
         playerScript.enabled = false;
+    }
+
+    IEnumerator ShakeText()
+    {
+        float elapsedTime = 0f;
+        float duration = 0.5f;
+        float slowdownFactor = 1f;
+
+        while (elapsedTime < duration)
+        {
+            float offsetY = Random.Range(-0.5f, 0.5f);
+
+            float lerpFactor = 1 - elapsedTime / duration;
+            Vector3 shakeOffset = new Vector3(0, offsetY, 0f) * slowdownFactor * lerpFactor;
+
+            deathText.transform.position = deathTextPos.position + shakeOffset;
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // After the shake, wait for 1.5 seconds and set text to nothing
+        yield return new WaitForSeconds(1f);
+        deathText.text = "";
+        deathText.transform.position = deathTextPos.position; // Reset the position
     }
 
     public void Restart()
@@ -359,6 +398,9 @@ public class PlayerCharacter : MonoBehaviour
 
         PlayerCharacter playerScript = this.GetComponent<PlayerCharacter>();
         playerScript.enabled = true;
+
+        deathText.text = "";
+        StopCoroutine(ShakeText());
 
         Destroy(bloodInstance);
         DestroyAllBullets();

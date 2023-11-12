@@ -4,6 +4,9 @@ using UnityEngine;
 public class PlayerUiManager : MonoBehaviour
 {
     [SerializeField] public GameObject gameOver;
+    [SerializeField] GameObject redFlash;
+
+    private bool isFlashing = false;
 
     public static PlayerUiManager instance;
 
@@ -31,6 +34,26 @@ public class PlayerUiManager : MonoBehaviour
 
         // Ensure alpha reaches 1.0f exactly
         canvasGroup.alpha = 1.0f;
+    }
+
+    IEnumerator FlashObject()
+    {
+        // Turn the object on
+        redFlash.SetActive(true);
+
+        // Wait for 0.125 seconds
+        yield return new WaitForSeconds(0.125f);
+
+        // Turn the object off
+        redFlash.SetActive(false);
+
+        // Wait for another 0.125 seconds
+        yield return new WaitForSeconds(0.125f);
+    }
+
+    public void WarningFlash()
+    {
+        StartCoroutine(FlashObject());
     }
 
     public void GameOver()
