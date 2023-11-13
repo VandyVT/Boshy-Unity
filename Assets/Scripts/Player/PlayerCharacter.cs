@@ -404,6 +404,8 @@ public class PlayerCharacter : MonoBehaviour
 
         Destroy(bloodInstance);
         DestroyAllBullets();
+
+        grounded = Physics2D.Raycast(transform.position, Vector2.down, 0.25f, groundLayer);
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -416,6 +418,29 @@ public class PlayerCharacter : MonoBehaviour
         if (collision.name == "SaveSpit")
         {
             OnPlayerDeath();
+        }
+
+        if (collision.name == ("Speed Forward"))
+        {
+            // Increase the player's right speed when standing on the trigger
+            moveSpeed *= 1.5f;  // You can adjust the multiplier as needed
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.name == ("Speed Forward"))
+        {
+            // Reset the player's right speed when leaving the trigger
+            moveSpeed /= 1.5f;  // You can adjust the divisor as needed
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.name == ("Speed Forward"))
+        {
+            _rb.velocity = new Vector2(moveSpeed, _rb.velocity.y);
         }
     }
 }

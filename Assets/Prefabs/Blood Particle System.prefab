@@ -3616,9 +3616,9 @@ ParticleSystem:
     serializedVersion: 4
     type: 1
     collisionMode: 1
-    colliderForce: 50
+    colliderForce: 10
     multiplyColliderForceByParticleSize: 0
-    multiplyColliderForceByParticleSpeed: 0
+    multiplyColliderForceByParticleSpeed: 1
     multiplyColliderForceByCollisionAngle: 1
     m_Planes: []
     m_Dampen:
@@ -3782,27 +3782,27 @@ ParticleSystem:
         m_RotationOrder: 4
     minKillSpeed: 0
     maxKillSpeed: 10000
-    radiusScale: 0.25
+    radiusScale: 1
     collidesWith:
       serializedVersion: 2
       m_Bits: 127
     maxCollisionShapes: 500
     quality: 0
     voxelSize: 0.5
-    collisionMessages: 0
+    collisionMessages: 1
     collidesWithDynamic: 1
     interiorCollisions: 0
   TriggerModule:
     enabled: 0
     serializedVersion: 2
-    inside: 1
+    inside: 0
     outside: 0
     enter: 0
     exit: 0
     colliderQueryMode: 2
-    radiusScale: 1
+    radiusScale: 1.25
     primitives:
-    - {fileID: 3525444265717516722}
+    - {fileID: 3525444265717516723}
   SubModule:
     serializedVersion: 2
     enabled: 0
@@ -3934,7 +3934,7 @@ ParticleSystem:
     lifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.0001
+      scalar: 0.00006
       minScalar: 1
       maxCurve:
         serializedVersion: 2

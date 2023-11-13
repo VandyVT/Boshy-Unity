@@ -41,14 +41,14 @@ public class PlayerUiManager : MonoBehaviour
         // Turn the object on
         redFlash.SetActive(true);
 
-        // Wait for 0.125 seconds
-        yield return new WaitForSeconds(0.125f);
+        // Wait for 0.05 seconds
+        yield return new WaitForSeconds(0.05f);
 
         // Turn the object off
         redFlash.SetActive(false);
 
-        // Wait for another 0.125 seconds
-        yield return new WaitForSeconds(0.125f);
+        // Wait for another 0.05 seconds
+        yield return new WaitForSeconds(0.05f);
     }
 
     public void WarningFlash()

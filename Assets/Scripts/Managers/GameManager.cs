@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
 
     public Text debugText;
 
+    public int difficultyNumber;
+
     public static GameManager Instance { get; private set; }
 
     private void Awake()
