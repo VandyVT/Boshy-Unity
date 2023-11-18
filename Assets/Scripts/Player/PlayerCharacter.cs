@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
 
@@ -33,7 +32,7 @@ public class PlayerCharacter : MonoBehaviour
     public AnimationCurve jump2Curve;
     public Animator animator;
 
-    public float bulletSpeed = 10f; // Adjust the bullet speed as needed
+    private float bulletSpeed = 8; // Adjust the bullet speed as needed
     private int maxBullets = 5;
     public float bulletLifetime = 2.0f;
     private int currentBulletCount = 0;
@@ -162,8 +161,11 @@ public class PlayerCharacter : MonoBehaviour
 
     void Jump()
     {
-        // Check for ground or platform collision
-        grounded = _rb.velocity.y == 0.0f;
+        Vector2 boxSize = new Vector2(0.25f, 0.2f);
+        Vector2 boxPosition = new Vector2(transform.position.x, transform.position.y - 0.05f);
+
+        // Perform a 2D boxcast to check for the "Ground" layer
+        grounded = Physics2D.BoxCast(boxPosition, boxSize, 0f, Vector2.down, 0.1f, groundLayer);
 
         if (grounded)
         {

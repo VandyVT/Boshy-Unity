@@ -8,13 +8,18 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private string fileName = "playerPosition.json";
 
-    [SerializeField] AudioSource _levelMusic;
+    [SerializeField] AudioSource[] _levelMusic;
     [SerializeField] AudioSource _gameOverMusic;
     [SerializeField] float fadeTime = 1.0f; // Time in seconds to fade the pitch to zero
 
+    [SerializeField] bool playMusicOnStart;
+
     public Text debugText;
 
-    public int difficultyNumber;
+    public int difficultyNumber; // 0 = Ez | 1 = Average | 2 = Hard | 3 = Rage
+    public int saveNumber;
+
+    [SerializeField] bool loadPosition;
 
     public static GameManager Instance { get; private set; }
 
@@ -26,20 +31,15 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        switch (_levelMusic)
+        foreach (var audioSource in _levelMusic)
         {
-            case null:
-                break;
-
-            default:
-                if (!_levelMusic.isPlaying)
-                {
-                    _levelMusic.Play();
-                }
-                break;
+            if (audioSource != null && !audioSource.isPlaying && playMusicOnStart)
+            {
+                audioSource.Play();
+            }
         }
 
-        LoadFromMenu();
+        LoadPlayerPosition();
     }
 
     private void Update()
@@ -56,14 +56,22 @@ public class GameManager : MonoBehaviour
     void ResetTheme()
     {
         StopAllCoroutines();
-        _levelMusic.pitch = 1f;
+
+        foreach (var audioSource in _levelMusic)
+        {
+            if (audioSource != null)
+            {
+                audioSource.pitch = 1f;
+            }
+        }
+
         _gameOverMusic.Stop();
     }
 
     IEnumerator FadeThemePitch()
     {
         float currentTime = 0;
-        float initialPitch = _levelMusic.pitch;
+        float initialPitch = _levelMusic[0].pitch;
 
         while (currentTime < fadeTime)
         {
@@ -71,7 +79,13 @@ public class GameManager : MonoBehaviour
             float normalizedTime = currentTime / fadeTime;
 
             // Use Mathf.Lerp to gradually change the pitch to zero
-            _levelMusic.pitch = Mathf.Lerp(initialPitch, 0f, normalizedTime);
+            foreach (var audioSource in _levelMusic)
+            {
+                if (audioSource != null)
+                {
+                    audioSource.pitch = Mathf.Lerp(initialPitch, 0f, normalizedTime);
+                }
+            }
 
             // Increment the time
             currentTime += Time.deltaTime;
@@ -81,7 +95,13 @@ public class GameManager : MonoBehaviour
         }
 
         // Ensure the final pitch is exactly zero
-        _levelMusic.pitch = 0f;
+        foreach (var audioSource in _levelMusic)
+        {
+            if (audioSource != null)
+            {
+                audioSource.pitch = 0f;
+            }
+        }
     }
 
     public void GameOver()
@@ -102,7 +122,7 @@ public class GameManager : MonoBehaviour
         playerData["position"]["y"].AsFloat = PlayerCharacter.instance.transform.position.y;
 
         // Get the file path in StreamingAssets
-        string filePath = (Application.persistentDataPath + "/playerData.json");
+        string filePath = (Application.persistentDataPath + "/playerData" + saveNumber + ".json");
 
         // Write JSON data to the file
         File.WriteAllText(filePath, playerData.ToString());
@@ -117,8 +137,9 @@ public class GameManager : MonoBehaviour
 
     public void LoadPlayerPosition()
     {
+        if (!loadPosition) return;
         // Get the file path in StreamingAssets
-        string filePath = (Application.persistentDataPath + "/playerData.json");
+        string filePath = (Application.persistentDataPath + "/playerData" + saveNumber + ".json");
 
         // Check if the file exists
         if (File.Exists(filePath))
@@ -135,37 +156,6 @@ public class GameManager : MonoBehaviour
 
             // Set player position
             PlayerCharacter.instance.lastSavedPostion = new Vector2(x, y);
-
-            Debug.Log("Player position loaded: " + PlayerCharacter.instance.transform.position);
-        }
-
-        else
-        {
-            Debug.Log("No saved player data found. Using default position.");
-        }
-    }
-
-
-    public void LoadFromMenu()
-    {
-        // Get the file path in StreamingAssets
-        string filePath = (Application.persistentDataPath + "/playerData.json");
-
-        // Check if the file exists
-        if (File.Exists(filePath))
-        {
-            // Read JSON data from the file
-            string jsonData = File.ReadAllText(filePath);
-
-            // Parse JSON data
-            JSONObject playerData = JSON.Parse(jsonData) as JSONObject;
-
-            // Retrieve player position
-            float x = playerData["position"]["x"].AsFloat;
-            float y = playerData["position"]["y"].AsFloat;
-
-            // Set player position
-            PlayerCharacter.instance.transform.position = new Vector2(x, y);
 
             Debug.Log("Player position loaded: " + PlayerCharacter.instance.transform.position);
         }

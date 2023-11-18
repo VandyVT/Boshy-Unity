@@ -63,6 +63,16 @@ public class CameraManager : MonoBehaviour
 
     public void Shake(float shakeAmountX, float shakeAmountY, float duration)
     {
+        if (playerObject != null)
+        {
+            Vector2 objectPosition = Camera.main.WorldToViewportPoint(playerObject.transform.position);
+
+            if (objectPosition.x < 0 || objectPosition.x > 1 || objectPosition.y < 0 || objectPosition.y > 1)
+            {
+                MoveCamera(objectPosition);
+            }
+        }
+
         originalPosition = cameraTransform.position;
         StartCoroutine(ShakeCoroutine(shakeAmountX, shakeAmountY, duration));
     }
