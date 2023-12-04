@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/scn_tutorial.unity
+    path: Assets/Vandy/Scenes/Menus/scn_intro.unity
+    guid: 1dd72f71b69df0d41bba9cbed277e843
+  - enabled: 1
+    path: Assets/Vandy/Scenes/Menus/scn_mainMenu.unity
+    guid: 890db09472aa39b4fae07a8776a34252
+  - enabled: 1
+    path: Assets/Vandy/Scenes/scn_tutorial.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects: {}
