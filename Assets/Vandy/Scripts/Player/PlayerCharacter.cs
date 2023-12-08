@@ -7,6 +7,10 @@ public class PlayerCharacter : MonoBehaviour
 {
     [SerializeField] bool isMenuAnimation;
 
+    [Header("Scene Collection")]
+    [SerializeField] Transform playerHolderObject;
+    [SerializeField] Transform regularPlayerCollection;
+
     [Header("Player Sounds")]
     [SerializeField] AudioSource _playerAudio;
     [SerializeField] AudioSource _sfxAudio;
@@ -442,6 +446,24 @@ public class PlayerCharacter : MonoBehaviour
         {
             // Reset the player's right speed when leaving the trigger
             moveSpeed /= 1.5f;  // You can adjust the divisor as needed
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            // Player is on a moving platform, set it as a child
+            playerHolderObject.SetParent(collision.transform);
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            // Player is no longer on the moving platform, set it back to sceneCollectionObj
+            playerHolderObject.SetParent(regularPlayerCollection);
         }
     }
 
