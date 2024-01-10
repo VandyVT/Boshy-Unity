@@ -1,0 +1,129 @@
+using UnityEngine;
+using System.Collections;
+
+public class MenuManager : MonoBehaviour
+{
+    bool introPlaying = true;
+    bool hasPressed = false;
+
+    [SerializeField] GameObject UI_Buttons;
+    [SerializeField] GameObject press_Start;
+    [SerializeField] GameObject MOTD;
+    [SerializeField] ObjectResizer first_Select;
+    [SerializeField] Animation boshy_Animation;
+    [SerializeField] Animation title_Animation;
+
+    [SerializeField] GameObject[] disableObjects;
+    [SerializeField] GameObject[] enableObjects;
+    [SerializeField] GameObject enableUiMenu;
+
+    [SerializeField] AudioSource menuMusic;
+
+    [SerializeField] AudioSource stormAudio;
+    [SerializeField] AudioClip[] lightningStrike;
+    [SerializeField] SpriteRenderer lightningRenderer;
+
+    private void Start()
+    {
+        LightningStrike();
+        StartCoroutine(PlayLightningStrikesRandomly());
+    }
+
+    void Update()
+    {
+        if (Input.anyKeyDown && introPlaying)
+        {
+            SkippedIntro();
+        }
+
+        if (Input.anyKeyDown && !hasPressed)
+        {
+            EnableMenu();
+            hasPressed = true;
+        }
+
+        // Check if the animation has finished playing
+        if (!boshy_Animation.isPlaying && introPlaying)
+        {
+            introPlaying = false;
+            title_Animation.Play();
+            press_Start.SetActive(true);
+            Debug.Log("Animation Finished Playing");
+        }
+    }
+
+    void EnableMenu()
+    {
+        enableUiMenu.SetActive(true);
+        press_Start.SetActive(false);
+        first_Select.Resize(true);
+        MOTD.SetActive(true);
+    }
+
+    void SkippedIntro()
+    {
+        introPlaying = false;
+        boshy_Animation.Stop();
+        title_Animation.Play();
+        LightningStrike();
+
+        menuMusic.time = 13.8f;
+
+        foreach (GameObject obj in disableObjects)
+        {
+            obj.SetActive(false);
+        }
+
+        foreach (GameObject obj in enableObjects)
+        {
+            obj.SetActive(true);
+        }
+
+        Debug.Log("Menu Animation Skipped");
+    }
+
+    void LightningStrike()
+    {
+        if (lightningStrike.Length > 0)
+        {
+            int randomIndex = Random.Range(0, lightningStrike.Length);
+            stormAudio.clip = lightningStrike[randomIndex];
+            stormAudio.Play();
+
+            Color startColor = lightningRenderer.color;
+            lightningRenderer.color = new Color(startColor.r, startColor.g, startColor.b, 0.5f);
+
+            StartCoroutine(FadeOutLightning(lightningRenderer, 0.75f));
+        }
+        else
+        {
+            Debug.LogWarning("No lightning strike clips assigned.");
+        }
+    }
+
+    IEnumerator PlayLightningStrikesRandomly()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(Random.Range(5, 15));
+            LightningStrike();
+        }
+    }
+
+    IEnumerator FadeOutLightning(SpriteRenderer renderer, float duration)
+    {
+        float currentTime = 0f;
+        Color startColor = renderer.color;
+        Color targetColor = new Color(startColor.r, startColor.g, startColor.b, 0f);
+
+        while (currentTime < duration)
+        {
+            currentTime += Time.deltaTime;
+            renderer.color = Color.Lerp(startColor, targetColor, currentTime / duration);
+            yield return null;
+        }
+
+        // Ensure the sprite is completely faded out
+        renderer.color = targetColor;
+    }
+}

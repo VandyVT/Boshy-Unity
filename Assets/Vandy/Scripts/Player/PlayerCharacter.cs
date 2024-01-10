@@ -32,25 +32,28 @@ public class PlayerCharacter : MonoBehaviour
     GameObject bloodInstance;
 
     [Header("Player Values")]
-    public float moveSpeed = 5f;
-    public float maxFallVelocity = -10f;
-    public AnimationCurve jumpCurve;
-    public AnimationCurve jump2Curve;
+    float moveSpeed = 3.25f;
+    float maxFallVelocity = -7.5f;
+    float waterFallVelocity = -2f;
+    float vineFallVelocity = -1f;
+    float jumpCurve = 9.50f;
+    float jump2Curve = 7.25f;
     public Animator animator;
 
-    private float bulletSpeed = 12; // Adjust the bullet speed as needed
-    private int maxBullets = 5;
-    public float bulletLifetime = 2.0f;
-    private int currentBulletCount = 0;
+    float bulletSpeed = 12; // Adjust the bullet speed as needed
+    int maxBullets = 5;
+    float bulletLifetime = 1f;
+    int currentBulletCount = 0;
 
     public LayerMask groundLayer;  // You may need to adjust the ground layer
 
-    public string[] deathTexts;
-    public TextMeshPro deathText;
+    [SerializeField] string[] deathTexts;
+    [SerializeField] TextMeshPro deathText;
     [SerializeField] Transform deathTextPos;
 
     bool onPlatform;
-    bool owater;
+    bool onWater;
+    bool onVine;
     bool djump;
     bool grounded;
 
@@ -117,10 +120,28 @@ public class PlayerCharacter : MonoBehaviour
     {
         if (isMenuAnimation) return;
 
-        // Check if the player is falling
-        if (_rb.velocity.y < maxFallVelocity)
+        if (onWater)
         {
-            // Set the y component of the velocity to the maximum fall velocity
+            // Check if the player is falling
+            if (_rb.velocity.y < waterFallVelocity)
+            {
+                // Set the y component of the velocity to the maximum fall velocity
+                _rb.velocity = new Vector3(_rb.velocity.x, waterFallVelocity);
+            }
+        }
+
+        if (onVine)
+        {
+            // Check if the player is falling
+            if (_rb.velocity.y < vineFallVelocity)
+            {
+                // Set the y component of the velocity to the maximum fall velocity
+                _rb.velocity = new Vector3(_rb.velocity.x, vineFallVelocity);
+            }
+        }
+
+        else if(_rb.velocity.y < maxFallVelocity)
+        {
             _rb.velocity = new Vector3(_rb.velocity.x, maxFallVelocity);
         }
     }
@@ -188,30 +209,19 @@ public class PlayerCharacter : MonoBehaviour
             if (grounded || onPlatform || Physics2D.Raycast(transform.position, Vector2.down, 0.25f, LayerMask.GetMask("Water")))
             {
                 // Regular jump
-                if (!owater)
-                {
-                    PlaySound("jump1");
-                }
+                PlaySound("jump1");
 
-                if (owater)
-                {
-                    djump = !Physics2D.Raycast(transform.position, Vector2.down, 0.25f, LayerMask.GetMask("WaterPlatform"));
-                }
-                else
-                {
-                    djump = true;
-                }
-
-                float jumpForce = jumpCurve.Evaluate(Time.time); // Use the Animation Curve for regular jump
+                float jumpForce = jumpCurve;
                 _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
             }
 
             else if (djump || Physics2D.Raycast(transform.position, Vector2.down, 0.25f, LayerMask.GetMask("Water2")))
             {
                 // Double jump
-                float jump2Force = jump2Curve.Evaluate(Time.time); // Use the Animation Curve for double jump
-                _rb.velocity = new Vector2(_rb.velocity.x, jump2Force);
                 PlaySound("jump2");
+
+                float jump2Force = jump2Curve;
+                _rb.velocity = new Vector2(_rb.velocity.x, jump2Force);
                 djump = false;
             }
         }
@@ -392,6 +402,7 @@ public class PlayerCharacter : MonoBehaviour
     public void Restart()
     {
         djump = true;
+        onWater = false;
         _playerDead = false;
 
         GameManager.Instance.LoadPlayerPosition();
@@ -440,12 +451,42 @@ public class PlayerCharacter : MonoBehaviour
         }
     }
 
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.name == ("Speed Forward"))
+        {
+            _rb.velocity = new Vector2(moveSpeed, _rb.velocity.y);
+        }
+
+        if (collision.name == ("Water"))
+        {
+            djump = true;
+            onWater = true;
+        }
+
+        if (collision.name == ("Vine"))
+        {
+            onVine = true;
+        }
+    }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.name == ("Speed Forward"))
         {
             // Reset the player's right speed when leaving the trigger
             moveSpeed /= 1.5f;  // You can adjust the divisor as needed
+        }
+
+        if (collision.name == ("Water"))
+        {
+            onWater = false;
+        }
+
+        if (collision.name == ("Vine"))
+        {
+            onVine = false;
         }
     }
 
@@ -464,14 +505,6 @@ public class PlayerCharacter : MonoBehaviour
         {
             // Player is no longer on the moving platform, set it back to sceneCollectionObj
             playerHolderObject.SetParent(regularPlayerCollection);
-        }
-    }
-
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.name == ("Speed Forward"))
-        {
-            _rb.velocity = new Vector2(moveSpeed, _rb.velocity.y);
         }
     }
 
