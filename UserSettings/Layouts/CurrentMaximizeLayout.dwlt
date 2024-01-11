@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 31056
+  controlID: 49583
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -142,7 +142,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 31057
+  controlID: 49584
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -167,7 +167,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 31058
+  controlID: 49585
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -226,8 +226,8 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 002cffff
-      m_LastClickedID: -54272
+      m_SelectedIDs: 
+      m_LastClickedID: 0
       m_ExpandedIDs: 002cffff8e72ffff0473ffff5e7affff407bffff4ac3ffffdefaffffe2fafffffefaffff26fbffffa05d0000045e00004e5e0000c65e00002094000046940000029500004e950000ea95000038960000c89600006e5d0100305e01007c5e0100185f0100445f0100665f0100f65f010036600100
       m_RenameOverlay:
         m_UserAcceptedRename: 0
@@ -561,9 +561,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 250.39288, y: 212.03668, z: 0.6619689}
+    m_Target: {x: 360.6815, y: 282.97702, z: -2.1232817}
     speed: 2
-    m_Value: {x: 250.39288, y: 212.03668, z: 0.6619689}
+    m_Value: {x: 360.6815, y: 282.97702, z: -2.1232817}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -614,9 +614,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 226.26836
+    m_Target: 359.1032
     speed: 2
-    m_Value: 226.26836
+    m_Value: 359.1032
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -725,7 +725,7 @@ MonoBehaviour:
   - {fileID: 13}
   - {fileID: 14}
   m_Selected: 0
-  m_LastSelected: 3
+  m_LastSelected: 1
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -768,21 +768,21 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Vandy/Scripts/Intro & Menu
+    - Assets/Resources
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 50
   m_LastFolders:
-  - Assets/Vandy/Scripts/Intro & Menu
+  - Assets/Resources
   m_LastFoldersGridSize: 50
   m_LastProjectPath: D:\Unity Projects\I Wanna Be The Boshy Reboot
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 251}
-    m_SelectedIDs: 92610000
-    m_LastClickedID: 24978
+    scrollPos: {x: 0, y: 127}
+    m_SelectedIDs: b2520200
+    m_LastClickedID: 152242
     m_ExpandedIDs: 000000004a6100004c6100004e61000050610000526100005461000056610000586100005a6100005c6100005e6100006061000062610000646100006661000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -836,8 +836,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 002cffff
-    m_LastClickedInstanceID: -54272
+    m_SelectedInstanceIDs: 
+    m_LastClickedInstanceID: 0
     m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: c62300008a5f0000d4c900004835fdffd85f00007e820000ae77ffff82750000a8bf0000
     m_RenameOverlay:
@@ -1094,7 +1094,7 @@ MonoBehaviour:
     m_OverlaysVisible: 1
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: -54272
+  m_LastSelectedObjectID: -54572
 --- !u!114 &15
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -1159,7 +1159,7 @@ MonoBehaviour:
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
   m_LastInspectedObjectInstanceID: -1
-  m_LastVerticalScrollValue: 0
+  m_LastVerticalScrollValue: 938
   m_GlobalObjectId: 
   m_InspectorMode: 0
   m_LockTracker:
