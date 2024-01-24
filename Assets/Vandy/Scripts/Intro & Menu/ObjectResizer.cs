@@ -39,7 +39,7 @@ public class ObjectResizer : MonoBehaviour
         while (timer < duration)
         {
             float progress = timer / duration;
-            float curveValue = resizeCurve.Evaluate(progress); // Use the curve to ease the scaling
+            float curveValue = resizeCurve.Evaluate(progress); 
             transform.localScale = Vector3.Lerp(transform.localScale, initialSize, curveValue);
             timer += Time.deltaTime;
             yield return null;

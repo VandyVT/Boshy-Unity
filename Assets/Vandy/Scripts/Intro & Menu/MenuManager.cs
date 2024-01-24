@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using System.IO;
+using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
@@ -23,23 +25,54 @@ public class MenuManager : MonoBehaviour
     [SerializeField] AudioClip[] lightningStrike;
     [SerializeField] SpriteRenderer lightningRenderer;
 
+    [SerializeField] GameObject initialMenu;
+    [SerializeField] Button gameButton;
+
+    [SerializeField] GameObject saveSelect;
+    [SerializeField] Button lastSelectedSave;
+
+    [SerializeField] GameObject difficultySelect;
+    [SerializeField] Button hardOnButton;
+
+    [SerializeField] Button[] fileSelections;
+    [SerializeField] Button[] difficultySelections;
+
     private void Start()
     {
         LightningStrike();
         StartCoroutine(PlayLightningStrikesRandomly());
+        StartCoroutine(MOTD_Timer());
     }
 
     void Update()
     {
-        if (Input.anyKeyDown && introPlaying)
+        if (Input.GetKeyDown(KeyCode.Return) && introPlaying)
         {
             SkippedIntro();
         }
 
-        if (Input.anyKeyDown && !hasPressed)
+        if (Input.GetKeyDown(KeyCode.Return) && !hasPressed)
         {
             EnableMenu();
             hasPressed = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if(saveSelect.activeInHierarchy && !difficultySelect.activeInHierarchy)
+            {
+                initialMenu.SetActive(true); 
+                saveSelect.SetActive(false);
+                gameButton.Select();
+            }
+
+            else if (difficultySelect.activeInHierarchy)
+            {
+                saveSelect.SetActive(true);
+                difficultySelect.SetActive(false);
+                lastSelectedSave.Select();
+                SetFileInteractivity(true);
+            }
         }
 
         // Check if the animation has finished playing
@@ -58,6 +91,7 @@ public class MenuManager : MonoBehaviour
         press_Start.SetActive(false);
         first_Select.Resize(true);
         MOTD.SetActive(true);
+        StopCoroutine(MOTD_Timer());
     }
 
     void SkippedIntro()
@@ -93,7 +127,7 @@ public class MenuManager : MonoBehaviour
             Color startColor = lightningRenderer.color;
             lightningRenderer.color = new Color(startColor.r, startColor.g, startColor.b, 0.5f);
 
-            StartCoroutine(FadeOutLightning(lightningRenderer, 0.75f));
+            StartCoroutine(FadeOutLightning(lightningRenderer, 1.25f));
         }
         else
         {
@@ -105,8 +139,17 @@ public class MenuManager : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(Random.Range(5, 15));
+            yield return new WaitForSeconds(Random.Range(5, 10));
             LightningStrike();
+        }
+    }
+
+    IEnumerator MOTD_Timer()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(11);
+            MOTD.SetActive(true);
         }
     }
 
@@ -125,5 +168,62 @@ public class MenuManager : MonoBehaviour
 
         // Ensure the sprite is completely faded out
         renderer.color = targetColor;
+    }
+
+    public void SetFileInteractivity(bool setTo)
+    {
+        foreach (var button in fileSelections)
+        {
+            if (button != null)
+            {
+                button.interactable = setTo;
+            }
+        }
+    }
+
+    public void SetDifficultyInteractivity(bool setTo)
+    {
+        foreach (var button in difficultySelections)
+        {
+            if (button != null)
+            {
+                button.interactable = setTo;
+            }
+        }
+    }
+
+    public void SetAsLastSelect(Button self)
+    {
+        lastSelectedSave = self;
+    }
+
+    public void GetSavefile(int setSaveNumber)
+    {
+        GameManager.Instance.saveNumber = setSaveNumber;
+    }
+
+    public void SetDifficulty(int setDifficulty)
+    {
+        GameManager.Instance.difficultyNumber = setDifficulty;
+    }
+
+    public void AttemptLoad()
+    {
+        Debug.Log("Attempting Load");
+
+        string filePath = (Application.persistentDataPath + "/playerData" + GameManager.Instance.saveNumber + ".json");
+        if (File.Exists(filePath))
+        {
+            GameManager.Instance.loadPositionOnStart = true;
+
+            GameManager.Instance.LoadPlayerPosition();
+        }
+
+        else
+        {
+            Debug.Log("File doesn't exist, opening up difficulty selection menu.");
+            difficultySelect.SetActive(true);
+            hardOnButton.Select();
+        }
     }
 }

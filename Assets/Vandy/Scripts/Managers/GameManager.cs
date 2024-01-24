@@ -3,43 +3,47 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using SimpleJSON;
+using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private string fileName = "playerPosition.json";
 
-    [SerializeField] AudioSource[] _levelMusic;
     [SerializeField] AudioSource _gameOverMusic;
-    [SerializeField] float fadeTime = 1.0f; // Time in seconds to fade the pitch to zero
-
-    [SerializeField] bool playMusicOnStart;
-
-    public Text debugText;
 
     public int difficultyNumber; // 0 = Ez | 1 = Average | 2 = Hard | 3 = Rage
     public int saveNumber;
 
-    [SerializeField] bool loadPosition;
+    public bool loadPositionOnStart;
 
-    public static GameManager Instance { get; private set; }
+    public static GameManager Instance;
+
+    private List<ResetCondition> resetConditions = new List<ResetCondition>();
 
     private void Awake()
     {
-        Instance = this;
-        Screen.fullScreen = false;
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(Instance);
+            Debug.Log("GameManager instance created and marked as DoNotDestroy.");
+        }
+
+        else
+        {
+            Debug.Log("GameManager instance already exists. Destroying duplicate.");
+            Destroy(gameObject);
+        }
     }
 
     void Start()
     {
-        foreach (var audioSource in _levelMusic)
+        if (loadPositionOnStart)
         {
-            if (audioSource != null && !audioSource.isPlaying && playMusicOnStart)
-            {
-                audioSource.Play();
-            }
+            LoadPlayerPosition();
         }
-
-        LoadPlayerPosition();
     }
 
     private void Update()
@@ -53,91 +57,65 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void FindAllResetobjects()
+    {
+        // Find all instances of ResetCondition and add them to the list
+        ResetCondition[] resetConditionArray = FindObjectsOfType<ResetCondition>();
+        resetConditions.AddRange(resetConditionArray);
+    }
+
+    public void ResetObjects()
+    {
+        foreach (ResetCondition resetCondition in resetConditions)
+        {
+            resetCondition.ResetObjectState();
+        }
+    }
+
     void ResetTheme()
     {
         StopAllCoroutines();
 
-        foreach (var audioSource in _levelMusic)
+        if (MusicManager.Instance != null)
         {
-            if (audioSource != null)
-            {
-                audioSource.pitch = 1f;
-            }
+            MusicManager.Instance.ResetMusicPitch();
         }
 
         _gameOverMusic.Stop();
     }
 
-    IEnumerator FadeThemePitch()
-    {
-        float currentTime = 0;
-        float initialPitch = _levelMusic[0].pitch;
-
-        while (currentTime < fadeTime)
-        {
-            // Calculate the normalized time (0 to 1)
-            float normalizedTime = currentTime / fadeTime;
-
-            // Use Mathf.Lerp to gradually change the pitch to zero
-            foreach (var audioSource in _levelMusic)
-            {
-                if (audioSource != null)
-                {
-                    audioSource.pitch = Mathf.Lerp(initialPitch, 0f, normalizedTime);
-                }
-            }
-
-            // Increment the time
-            currentTime += Time.deltaTime;
-
-            // Wait for the next frame
-            yield return null;
-        }
-
-        // Ensure the final pitch is exactly zero
-        foreach (var audioSource in _levelMusic)
-        {
-            if (audioSource != null)
-            {
-                audioSource.pitch = 0f;
-            }
-        }
-    }
-
     public void GameOver()
     {
-        StartCoroutine(FadeThemePitch());
+        if (MusicManager.Instance != null) 
+        {
+            MusicManager.Instance.LowerPitch();
+        }
         PlayerUiManager.instance.GameOver();
         _gameOverMusic.Play();
     }
 
     public void SavePlayerPosition()
     {
-        debugText.text = "";
-        debugText.text += ("Starting save operation to " + Application.persistentDataPath);
-
         // Create JSON object
         JSONObject playerData = new JSONObject();
         playerData["position"]["x"].AsFloat = PlayerCharacter.instance.transform.position.x;
         playerData["position"]["y"].AsFloat = PlayerCharacter.instance.transform.position.y;
+        playerData["difficulty"].AsInt = difficultyNumber;
 
         // Get the file path in StreamingAssets
         string filePath = (Application.persistentDataPath + "/playerData" + saveNumber + ".json");
+
+        // Save current scene name
+        playerData["sceneName"] = SceneManager.GetActiveScene().name;
 
         // Write JSON data to the file
         File.WriteAllText(filePath, playerData.ToString());
 
         Debug.Log("Player position saved!");
-
-        //CODE
-        debugText.text += ("Data saved to: " + Application.persistentDataPath);
-
-        if (!File.Exists(Application.persistentDataPath + "/playerData.json")) debugText.text += "\nEXCEPT NOT REALLY!!";
     }
 
     public void LoadPlayerPosition()
     {
-        if (!loadPosition) return;
         // Get the file path in StreamingAssets
         string filePath = (Application.persistentDataPath + "/playerData" + saveNumber + ".json");
 
@@ -150,19 +128,41 @@ public class GameManager : MonoBehaviour
             // Parse JSON data
             JSONObject playerData = JSON.Parse(jsonData) as JSONObject;
 
+            // Check if the scene name matches the current open scene
+            string savedSceneName = playerData["sceneName"];
+            string currentSceneName = SceneManager.GetActiveScene().name;
+            difficultyNumber = playerData["difficulty"];
+
+            if (savedSceneName != currentSceneName)
+            {
+                // Load the saved scene before proceeding to load data
+                loadPositionOnStart = true;
+                SceneManager.LoadScene(savedSceneName);
+            }
+
             // Retrieve player position
             float x = playerData["position"]["x"].AsFloat;
             float y = playerData["position"]["y"].AsFloat;
 
             // Set player position
-            PlayerCharacter.instance.lastSavedPostion = new Vector2(x, y);
+            if (savedSceneName == currentSceneName)
+            {
+                PlayerCharacter.instance.lastSavedPostion = new Vector2(x, y);
+            }
 
             Debug.Log("Player position loaded: " + PlayerCharacter.instance.transform.position);
+
+            Invoke("PositionOnStartResetDelay", 1);
         }
 
         else
         {
             Debug.Log("No saved player data found. Using default position.");
         }
+    }
+
+    void PositionOnStartResetDelay()
+    {
+        loadPositionOnStart = false;
     }
 }

@@ -8,8 +8,6 @@ public class SavePoint : MonoBehaviour
 
     private Animator animator;
 
-    public float movementSpeed = 5f;
-
     [Header("SPIT")]
     public GameObject prefabToSpawn;
     public GameObject prefabSpawned;
@@ -17,6 +15,18 @@ public class SavePoint : MonoBehaviour
     private bool isSaving = false;
     private bool canSpawn = true;
     public Vector2 currentPlayerPos;
+
+    [Header("Difficulty Settings")]
+    [Tooltip("Maximum 3, despawns save if despawn difficulty is less than the GameManager's Difficulty, 0 being easiest, 3 being rage mode, set it to 3 if you never want it to despawn on any difficulty")]
+    [SerializeField] int despawnDifficulty; 
+
+    private void Start()
+    {
+        if (despawnDifficulty < GameManager.Instance.difficultyNumber)
+        {
+            this.gameObject.SetActive(false);
+        }
+    }
 
     public void Save()
     {
@@ -63,7 +73,7 @@ public class SavePoint : MonoBehaviour
         // Apply force to the Rigidbody2D
         prefabSpawned.GetComponent<Rigidbody2D>().AddForce(force, ForceMode2D.Impulse);
 
-        // Destroy the spawned prefab
+        // Destroy the spawned prefab after "destroyedDelay" time has passed
         Invoke("WaitUntilDestroy", destroyDelay);
     }
 
@@ -83,7 +93,7 @@ public class SavePoint : MonoBehaviour
         direction.y += 0.5f;
 
         // Normalize the direction and scale it by a desired force magnitude
-        Vector2 force = direction.normalized * 6f; // Adjust the magnitude as needed
+        Vector2 force = direction.normalized * 6f; 
 
         return force;
     }

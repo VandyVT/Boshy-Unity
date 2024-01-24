@@ -889,58 +889,7 @@ MonoBehaviour:
   _playerSprite: {fileID: 472274439428224355}
   _bloodPrefab: {fileID: 3525444265717516725, guid: dcf5a5aa12752b4409e2bfeefe550b2d, type: 3}
   _bulletPrefab: {fileID: 1589401610624196267, guid: 013899037f3536c4aa930f904894bc46, type: 3}
-  moveSpeed: 3.25
-  maxFallVelocity: -7.5
-  jumpCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 9.5
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 9.5
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  jump2Curve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 7.25
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 7.25
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
   animator: {fileID: 472274439674760508}
-  bulletLifetime: 1.5
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -1000,7 +949,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.25, y: 0.3}
+  m_Size: {x: 0.24, y: 0.3}
   m_EdgeRadius: 0
 --- !u!95 &472274439674760508
 Animator:

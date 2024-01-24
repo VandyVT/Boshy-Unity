@@ -28,7 +28,7 @@ public class PlayerCharacter : MonoBehaviour
 
     [Header("Related Player Objects")]
     [SerializeField] GameObject _bloodPrefab;
-    [SerializeField] GameObject _bulletPrefab; // Assign your prefab in the Unity Editor
+    [SerializeField] GameObject _bulletPrefab;
     GameObject bloodInstance;
 
     [Header("Player Values")]
@@ -66,6 +66,18 @@ public class PlayerCharacter : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        
+        if (_rb == null)
+        {
+            if (isMenuAnimation) return;
+            _rb = GetComponent<Rigidbody2D>();
+        }
+
+        if (GameManager.Instance.loadPositionOnStart)
+        {
+            _playerAudio.Stop();
+            Restart();
+        }
     }
 
     void Start()
@@ -78,24 +90,16 @@ public class PlayerCharacter : MonoBehaviour
 
         else
         {
-            // Random speed and pitch within a specified range
             float randomSpeed = Random.Range(0.75f, 1.25f);
 
-            // Set the pitch and play the audio clip
             _playerAudio.pitch = randomSpeed;
             _playerAudio.PlayOneShot(_introClip);
         }
 
-        if (_rb == null)
-        {
-            if (isMenuAnimation) return;
-            _rb = GetComponent<Rigidbody2D>();
-        }
-
+        GameManager.Instance.FindAllResetobjects();
         deathText.text = "";
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (isMenuAnimation) return;
@@ -122,20 +126,16 @@ public class PlayerCharacter : MonoBehaviour
 
         if (onWater)
         {
-            // Check if the player is falling
             if (_rb.velocity.y < waterFallVelocity)
             {
-                // Set the y component of the velocity to the maximum fall velocity
                 _rb.velocity = new Vector3(_rb.velocity.x, waterFallVelocity);
             }
         }
 
         if (onVine)
         {
-            // Check if the player is falling
             if (_rb.velocity.y < vineFallVelocity)
             {
-                // Set the y component of the velocity to the maximum fall velocity
                 _rb.velocity = new Vector3(_rb.velocity.x, vineFallVelocity);
             }
         }
@@ -167,7 +167,6 @@ public class PlayerCharacter : MonoBehaviour
     {
         float moveInput = Input.GetAxis("Horizontal");
 
-        // Set the velocity directly based on the input and desired constant speed
         if (moveInput != 0)
         {
             _rb.velocity = new Vector2(moveSpeed * Mathf.Sign(moveInput), _rb.velocity.y);
@@ -208,7 +207,7 @@ public class PlayerCharacter : MonoBehaviour
         {
             if (grounded || onPlatform || Physics2D.Raycast(transform.position, Vector2.down, 0.25f, LayerMask.GetMask("Water")))
             {
-                // Regular jump
+                // First jump
                 PlaySound("jump1");
 
                 float jumpForce = jumpCurve;
@@ -226,10 +225,8 @@ public class PlayerCharacter : MonoBehaviour
             }
         }
 
-        // Negate vertical velocity after releasing the jump key
         if (Input.GetKeyUp(KeyCode.Z) && _rb.velocity.y > 0)
         {
-            // Adjust the value based on your needs
             float maxFallSpeed = 5.0f;
             _rb.velocity = new Vector2(_rb.velocity.x, Mathf.Clamp(_rb.velocity.y, 0, maxFallSpeed));
         }
@@ -249,16 +246,12 @@ public class PlayerCharacter : MonoBehaviour
 
             _sfxAudio.PlayOneShot(_shootSound);
 
-            // Check the local scale to determine the direction
             float direction = transform.localScale.x;
 
-            // Set the velocity based on the direction
             bulletRb.velocity = new Vector2(direction, 0) * bulletSpeed;
 
-            // Automatically destroy the bullet after a certain lifetime
             Destroy(bullet, bulletLifetime);
 
-            // Add the bullet to the list
             bullets.Add(bullet);
         }
     }
@@ -269,7 +262,6 @@ public class PlayerCharacter : MonoBehaviour
         {
             if (bullets[i] == null)
             {
-                // Bullet was destroyed, remove from the list
                 bullets.RemoveAt(i);
                 BulletDestroyed();
             }
@@ -278,7 +270,6 @@ public class PlayerCharacter : MonoBehaviour
 
     void BulletDestroyed()
     {
-        // Logic to handle a destroyed bullet
         currentBulletCount--;
     }
 
@@ -286,14 +277,12 @@ public class PlayerCharacter : MonoBehaviour
     {
         foreach (GameObject obj in bullets)
         {
-            // Check if the object exists before attempting to destroy it
             if (obj != null)
             {
                 Destroy(obj);
             }
         }
 
-        // Clear the list after destroying all objects
         bullets.Clear();
     }
 
@@ -313,7 +302,6 @@ public class PlayerCharacter : MonoBehaviour
             case "jump2":
                 _sfxAudio.PlayOneShot(_jumpClips[1]);
                 break;
-            // Add more cases for other sound names if needed
             default:
                 Debug.LogWarning("Unknown sound name: " + soundName);
                 break;
@@ -331,6 +319,7 @@ public class PlayerCharacter : MonoBehaviour
 
         return _playerDead;
     }
+    private bool bloodInstantiated = false; 
 
     void OnPlayerDeath()
     {
@@ -338,33 +327,26 @@ public class PlayerCharacter : MonoBehaviour
 
         _sfxAudio.PlayOneShot(_slashClip);
 
-        // Random speed and pitch within a specified range
         float randomSpeed = Random.Range(0.75f, 1.25f);
 
-        // Get a random index within the array length
         int randomIndex = Random.Range(0, deathTexts.Length);
 
-        // Select the random text
         string randomText = deathTexts[randomIndex];
 
-        // Set the pitch and play the audio clip
         _playerAudio.pitch = randomSpeed;
-        _playerAudio.PlayOneShot(_deathClips[randomIndex]); // Assuming _deathClips is your array of AudioClips
+        _playerAudio.PlayOneShot(_deathClips[randomIndex]);
 
-        if (_bloodPrefab != null)
+        if (_bloodPrefab != null && !bloodInstantiated)
         {
-            // Spawn the prefab at the current position and rotation of the script's GameObject
             bloodInstance = Instantiate(_bloodPrefab, transform.position, transform.rotation);
+            bloodInstantiated = true; 
         }
 
-        // Set TMPro text to the selected string
         deathText.text = randomText;
         deathText.transform.position = deathTextPos.position;
 
-        // Start coroutine for the shake effect
         StartCoroutine(ShakeText());
 
-        // Other game over actions
         GameManager.Instance.GameOver();
 
         _playerSprite.SetActive(false);
@@ -393,19 +375,23 @@ public class PlayerCharacter : MonoBehaviour
             yield return null;
         }
 
-        // After the shake, wait for 1.5 seconds and set text to nothing
         yield return new WaitForSeconds(1f);
         deathText.text = "";
-        deathText.transform.position = deathTextPos.position; // Reset the position
+        deathText.transform.position = deathTextPos.position;
     }
 
     public void Restart()
     {
+        if (isMenuAnimation) return;
+
+        bloodInstantiated = false;
         djump = true;
         onWater = false;
         _playerDead = false;
 
         GameManager.Instance.LoadPlayerPosition();
+        GameManager.Instance.ResetObjects();
+
         // Random speed and pitch within a specified range
         float randomSpeed = Random.Range(0.75f, 1.25f);
 
@@ -413,6 +399,8 @@ public class PlayerCharacter : MonoBehaviour
         _playerAudio.pitch = randomSpeed;
         _playerAudio.Stop();
         _playerAudio.PlayOneShot(_introClip);
+
+        Debug.Log("Restart Triggered");
 
         transform.position = lastSavedPostion;
         _playerSprite.SetActive(true);
@@ -434,12 +422,7 @@ public class PlayerCharacter : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.name == "Spike")
-        {
-            OnPlayerDeath();
-        }
-
-        if (collision.name == "SaveSpit")
+        if (collision.name == "Spike" || collision.name == "Fruit" || collision.name == "SaveSpit")
         {
             OnPlayerDeath();
         }
@@ -447,7 +430,7 @@ public class PlayerCharacter : MonoBehaviour
         if (collision.name == ("Speed Forward"))
         {
             // Increase the player's right speed when standing on the trigger
-            moveSpeed *= 1.5f;  // You can adjust the multiplier as needed
+            moveSpeed *= 1.5f;
         }
     }
 
@@ -476,7 +459,7 @@ public class PlayerCharacter : MonoBehaviour
         if (collision.name == ("Speed Forward"))
         {
             // Reset the player's right speed when leaving the trigger
-            moveSpeed /= 1.5f;  // You can adjust the divisor as needed
+            moveSpeed /= 1.5f;
         }
 
         if (collision.name == ("Water"))

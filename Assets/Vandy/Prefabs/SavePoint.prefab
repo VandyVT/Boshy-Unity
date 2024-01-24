@@ -268,12 +268,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _saveAudioSource: {fileID: 5501555306765455205}
   _saveClip: {fileID: 8300000, guid: 817a0ba1b290e72439605d0021c815e5, type: 3}
-  movementSpeed: 5
   prefabToSpawn: {fileID: 1589401610624196267, guid: 553d77a2abf58cc47bd9bc36e079c530, type: 3}
   prefabSpawned: {fileID: 0}
-  spawnCooldown: 1.5
   destroyDelay: 1.5
   currentPlayerPos: {x: 0, y: 0}
+  despawnDifficulty: 4
 --- !u!61 &5501555307584949063
 BoxCollider2D:
   m_ObjectHideFlags: 0
