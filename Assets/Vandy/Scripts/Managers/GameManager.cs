@@ -55,6 +55,18 @@ public class GameManager : MonoBehaviour
 
             ResetTheme();
         }
+
+        if (Input.GetKeyDown(KeyCode.F4))
+        {
+            // Toggle fullscreen mode
+            Screen.fullScreen = !Screen.fullScreen;
+        }
+
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            SceneManager.LoadScene("scn_intro");
+            Destroy(this.gameObject);
+        }
     }
 
     public void FindAllResetobjects()

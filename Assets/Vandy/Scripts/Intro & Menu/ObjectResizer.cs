@@ -62,4 +62,9 @@ public class ObjectResizer : MonoBehaviour
             StartCoroutine(ScaleDown(0.2f));
         }
     }
+
+    private void OnDisable()
+    {
+        transform.localScale = initialSize;
+    }
 }

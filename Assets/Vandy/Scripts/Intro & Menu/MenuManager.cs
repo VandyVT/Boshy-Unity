@@ -37,6 +37,8 @@ public class MenuManager : MonoBehaviour
     [SerializeField] Button[] fileSelections;
     [SerializeField] Button[] difficultySelections;
 
+    [SerializeField] GameObject loadingText;
+
     private void Start()
     {
         LightningStrike();
@@ -214,8 +216,9 @@ public class MenuManager : MonoBehaviour
         string filePath = (Application.persistentDataPath + "/playerData" + GameManager.Instance.saveNumber + ".json");
         if (File.Exists(filePath))
         {
-            GameManager.Instance.loadPositionOnStart = true;
+            loadingText.SetActive(true);
 
+            GameManager.Instance.loadPositionOnStart = true;
             GameManager.Instance.LoadPlayerPosition();
         }
 
