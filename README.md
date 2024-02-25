@@ -2,6 +2,7 @@
 - Make sure you are using Unity 2021.3.24f1 
 - Be sure your computer is able to run the engine
 - Knowledge in C# is preferred, but not completely required!
+- Join the Team Parapoly discord to talk directly to the developer (https://discord.gg/bPqwtZhJgR)
 
 # How do I open the project in Unity? 
 
