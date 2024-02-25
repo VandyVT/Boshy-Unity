@@ -6,7 +6,7 @@ public class ObjectResizer : MonoBehaviour
 {
     private Vector3 initialSize;
 
-    [SerializeField] private AnimationCurve resizeCurve; // Add this line to expose the curve in the Inspector
+    [SerializeField] private AnimationCurve resizeCurve;
 
     private void Awake()
     {

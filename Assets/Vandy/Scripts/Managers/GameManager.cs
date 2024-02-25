@@ -1,10 +1,7 @@
-using System.Collections;
 using System.IO;
 using UnityEngine;
-using UnityEngine.UI;
 using SimpleJSON;
 using UnityEngine.SceneManagement;
-using Unity.VisualScripting;
 using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour

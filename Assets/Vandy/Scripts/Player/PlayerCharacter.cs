@@ -40,12 +40,12 @@ public class PlayerCharacter : MonoBehaviour
     float jump2Curve = 7.25f;
     public Animator animator;
 
-    float bulletSpeed = 12; // Adjust the bullet speed as needed
+    float bulletSpeed = 12;
     int maxBullets = 5;
     float bulletLifetime = 1f;
     int currentBulletCount = 0;
 
-    public LayerMask groundLayer;  // You may need to adjust the ground layer
+    public LayerMask groundLayer;
 
     [SerializeField] string[] deathTexts;
     [SerializeField] TextMeshPro deathText;

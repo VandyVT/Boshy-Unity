@@ -47,7 +47,7 @@ public class BossHellKitty : MonoBehaviour
     IEnumerator IntroSequence()
     {
         // Initial wait period
-        yield return new WaitForSeconds(1.5f); // Adjust the time as needed
+        yield return new WaitForSeconds(1.5f);
 
         // Play intro audio && Fade in background 
         StartCoroutine(FadeIntroBG());
@@ -55,13 +55,13 @@ public class BossHellKitty : MonoBehaviour
         introAudioSource.Play();
 
         // Wait for 30 seconds
-        yield return new WaitForSeconds(25f); // Adjust the time as needed
+        yield return new WaitForSeconds(25f);
 
         // Play sound clip
         introAudioSource.PlayOneShot(hateClip, 0.4f);
 
         // Wait for a couple more seconds
-        yield return new WaitForSeconds(2.75f); // Adjust the time as needed
+        yield return new WaitForSeconds(2.75f);
 
         // End period, activate the boss
         ActivateBoss();
@@ -147,7 +147,7 @@ public class BossHellKitty : MonoBehaviour
     IEnumerator EndSequence()
     {
         // Initial wait period
-        yield return new WaitForSeconds(1f); // Adjust the time as needed
+        yield return new WaitForSeconds(1f);
         bossSfx.PlayOneShot(dyingCharge, 0.25f);
 
         // Stop Music after 4 more seconds
