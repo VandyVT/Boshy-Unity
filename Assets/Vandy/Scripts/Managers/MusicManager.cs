@@ -6,7 +6,14 @@ public class MusicManager : MonoBehaviour
     public static MusicManager Instance;
 
     [SerializeField] AudioSource[] _levelMusic;
-    [SerializeField] bool playMusicOnStart; 
+    [SerializeField] bool playMusicOnStart;
+
+    [Header("Loop Properties")]
+    [SerializeField] bool shouldLoopAtPoint;
+    [SerializeField] float loopStart;
+    [SerializeField] float loopEnd;
+
+    float loopTime;
 
     float fadeTime = 3.0f;
 
@@ -30,6 +37,29 @@ public class MusicManager : MonoBehaviour
             if (audioSource != null && !audioSource.isPlaying && playMusicOnStart)
             {
                 audioSource.Play();
+            }
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (shouldLoopAtPoint && _levelMusic[0].isPlaying)
+        {
+            if (_levelMusic[0].time >= loopEnd)
+            {
+                LoopMusic();
+            }
+        }
+    }
+
+    void LoopMusic()
+    {
+        foreach (var audioSource in _levelMusic)
+        {
+            if (audioSource != null)
+            {
+                audioSource.time = loopStart;
+                Debug.Log("Looped back to " + loopStart);
             }
         }
     }
