@@ -359,7 +359,7 @@ public class PlayerCharacter : MonoBehaviour
     IEnumerator ShakeText()
     {
         float elapsedTime = 0f;
-        float duration = 0.5f;
+        float duration = 0.4f;
         float slowdownFactor = 1f;
 
         while (elapsedTime < duration)
