@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 83881
+  controlID: 89386
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 83882
+  controlID: 89387
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -169,7 +169,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 83883
+  controlID: 89388
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -228,9 +228,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
-      m_LastClickedID: 0
-      m_ExpandedIDs: 6e14f2ff2815f2ff2a15f2ffca17f2ffb037f5ffce37f5ffe43af5ff0403fcff2a03fcff4603fcff0a04fcffac08fcffe46cfcff8892fcffca92fcff8e93fcffcc95fcff1496fcff8296fcfff09cfcff3ca9fcffcea9fcfffcc4fcff68c5fcff96d5fcffb8d5fcffbcd5fcffd8d5fcff9ed6fcff4ad9fcff3475fdffeaa3feff2aa4fefff8a4feff30a5feff6ca8feff02baffff04baffff08baffffaabbffff74beffff64c7ffff58caffff02ccffff68ccfffff6ccffff44d1ffff40f9ffff5cf9ffff26fbfffff4ffffffd65d0000da5d0000225e0000285e0000325e0000a85e000084d20000ccd2000052d30000acd3000022d400003cd400005ed4000082d400009cd40000fed4000008d8000050d800009cd90000a6d9000020da0000c6da000078390100c0390100d0390100063a0100463a0100a03a0100ba3a01000c3b0100163b0100203b01003a3b01005c3b0100803b0100863b0100ec3b0100f83b0100fe3b01003c3c0100da6a0200326b0200766b0200b46b0200d66b0200506c0200a87d020064930200de9a02004c9b0200969b02009e1003001e1103002c1103004e110300721103008c110300d6110300dc1103001c12030076ad0300cead0300d8ad0300e2ad030050ae03007aae0300a6ae030064150400f81a0400c61b0400ec1b0400b81c0400de1d0400541e04007e1e0400a81e0400
+      m_SelectedIDs: 3295f1ff
+      m_LastClickedID: -944846
+      m_ExpandedIDs: 26aaf1ff6e14f2ff2815f2ff2a15f2ffca17f2ffb037f5ffce37f5ffe43af5ff0403fcff2a03fcff4603fcff0a04fcffac08fcffe46cfcff8892fcffca92fcff8e93fcffcc95fcff1496fcff8296fcfff09cfcff3ca9fcffcea9fcfffcc4fcff68c5fcff96d5fcffb8d5fcffbcd5fcffd8d5fcff9ed6fcff4ad9fcff3475fdffeaa3feff2aa4fefff8a4feff30a5feff6ca8feff02baffff04baffff08baffffaabbffff74beffff64c7ffff58caffff02ccffff68ccfffff6ccffff44d1ffff40f9ffff5cf9ffff26fbfffff4ffffffd65d0000da5d0000225e0000285e0000325e0000a85e000084d20000ccd2000052d30000acd3000022d400003cd400005ed4000082d400009cd40000fed4000008d8000050d800009cd90000a6d9000020da0000c6da000078390100c0390100d0390100063a0100463a0100a03a0100ba3a01000c3b0100163b0100203b01003a3b01005c3b0100803b0100863b0100ec3b0100f83b0100fe3b01003c3c0100da6a0200326b0200766b0200b46b0200d66b0200506c0200a87d020064930200de9a02004c9b0200969b02009e1003001e1103002c1103004e110300721103008c110300d6110300dc1103001c12030076ad0300cead0300d8ad0300e2ad030050ae03007aae0300a6ae030064150400f81a0400c61b0400ec1b0400b81c0400de1d0400541e04007e1e0400a81e0400
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -709,7 +709,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: ProjectBrowser
+  m_Name: ConsoleWindow
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
@@ -718,9 +718,9 @@ MonoBehaviour:
     y: 625
     width: 1435
     height: 314
-  m_MinSize: {x: 231, y: 271}
-  m_MaxSize: {x: 10001, y: 10021}
-  m_ActualView: {fileID: 11}
+  m_MinSize: {x: 101, y: 121}
+  m_MaxSize: {x: 4001, y: 4021}
+  m_ActualView: {fileID: 12}
   m_Panes:
   - {fileID: 11}
   - {fileID: 12}
@@ -728,8 +728,8 @@ MonoBehaviour:
   - {fileID: 14}
   - {fileID: 15}
   - {fileID: 16}
-  m_Selected: 0
-  m_LastSelected: 1
+  m_Selected: 1
+  m_LastSelected: 0
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -772,21 +772,21 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Vandy/Prefabs/Player Prefabs
+    - Assets/Vandy/Scenes/Menus
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Vandy/Prefabs/Player Prefabs
+  - Assets/Vandy/Scenes/Menus
   m_LastFoldersGridSize: 64
   m_LastProjectPath: D:\Unity Projects\I Wanna Be The Boshy Reboot
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 223}
-    m_SelectedIDs: 00690000
-    m_LastClickedID: 26880
+    scrollPos: {x: 0, y: 287}
+    m_SelectedIDs: d2620000
+    m_LastClickedID: 25298
     m_ExpandedIDs: 000000005461000056610000586100005a6100005c6100005e61000060610000626100006461000066610000686100006a6100006c6100006e61000070610000d26200002a6700001e6d000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -840,9 +840,9 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 
-    m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 1
+    m_SelectedInstanceIDs: 18730000
+    m_LastClickedInstanceID: 29464
+    m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: c62300008a5f0000d4c900004835fdffd85f00007e820000ae77ffff82750000a8bf00009471010032ef0000ee6c00008e6a0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -2311,8 +2311,8 @@ MonoBehaviour:
     y: 0
     width: 485
     height: 939
-  m_MinSize: {x: 276, y: 71}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 18}
   m_Panes:
   - {fileID: 18}
@@ -2336,7 +2336,7 @@ MonoBehaviour:
   m_MinSize: {x: 275, y: 50}
   m_MaxSize: {x: 4000, y: 4000}
   m_TitleContent:
-    m_Text: Inspector
+    m_Text: Debug
     m_Image: {fileID: -2667387946076563598, guid: 0000000000000000d000000000000000, type: 0}
     m_Tooltip: 
   m_Pos:
@@ -2359,7 +2359,7 @@ MonoBehaviour:
   m_LastInspectedObjectInstanceID: -1
   m_LastVerticalScrollValue: 0
   m_GlobalObjectId: 
-  m_InspectorMode: 0
+  m_InspectorMode: 1
   m_LockTracker:
     m_IsLocked: 0
   m_PreviewWindow: {fileID: 0}
