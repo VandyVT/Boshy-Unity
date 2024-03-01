@@ -420,6 +420,11 @@ public class PlayerCharacter : MonoBehaviour
         grounded = Physics2D.Raycast(transform.position, Vector2.down, 0.25f, groundLayer);
     }
 
+    public void StopPlayerAudio()
+    {
+        _playerAudio.Stop();
+    }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.name == "Spike" || collision.name == "Fruit" || collision.name == "SaveSpit")

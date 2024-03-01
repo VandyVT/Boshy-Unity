@@ -148,6 +148,7 @@ public class GameManager : MonoBehaviour
                 // Load the saved scene before proceeding to load data
                 loadPositionOnStart = true;
                 resetConditions.Clear();
+                PlayerCharacter.instance.StopPlayerAudio();
                 SceneManager.LoadScene(savedSceneName);
             }
 

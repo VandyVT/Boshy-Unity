@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 118719687092754039}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 70.49053, y: -4.20289, z: -0.6659865}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -48,6 +48,9 @@ MonoBehaviour:
   _levelMusic:
   - {fileID: 118719687333009478}
   playMusicOnStart: 0
+  shouldLoopAtPoint: 0
+  loopStart: 0
+  loopEnd: 0
 --- !u!1 &118719687333009496
 GameObject:
   m_ObjectHideFlags: 0
