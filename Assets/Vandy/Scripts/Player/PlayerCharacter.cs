@@ -102,7 +102,7 @@ public class PlayerCharacter : MonoBehaviour
 
     void Update()
     {
-        if (isMenuAnimation) return;
+        if (isMenuAnimation || GameManager.Instance.isWarping) return;
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -382,7 +382,7 @@ public class PlayerCharacter : MonoBehaviour
 
     public void Restart()
     {
-        if (isMenuAnimation) return;
+        if (isMenuAnimation || GameManager.Instance.isWarping) return;
 
         bloodInstantiated = false;
         djump = true;

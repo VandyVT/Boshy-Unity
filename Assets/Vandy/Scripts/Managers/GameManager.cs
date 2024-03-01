@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public int saveNumber;
 
     public bool loadPositionOnStart;
+    public bool isWarping = false;
 
     public static GameManager Instance;
 

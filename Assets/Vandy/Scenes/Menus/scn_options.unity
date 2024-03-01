@@ -479,7 +479,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 118719687092754036, guid: 5cd9eeadc303f324693204d5011679c8, type: 3}
       propertyPath: loopEnd
-      value: 21.99
+      value: 11.3
       objectReference: {fileID: 0}
     - target: {fileID: 118719687092754036, guid: 5cd9eeadc303f324693204d5011679c8, type: 3}
       propertyPath: loopStart
@@ -511,15 +511,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 118719688482145198, guid: 5cd9eeadc303f324693204d5011679c8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 70.49053
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 118719688482145198, guid: 5cd9eeadc303f324693204d5011679c8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.20289
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 118719688482145198, guid: 5cd9eeadc303f324693204d5011679c8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.6659865
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 118719688482145198, guid: 5cd9eeadc303f324693204d5011679c8, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1144,7 +1144,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 800, y: 608}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
