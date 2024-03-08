@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 1589401610624196267}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.75, y: 1.75, z: 1}
+  m_LocalScale: {x: 1.8, y: 1.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1589401612516067939}
@@ -105,6 +105,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1589401612516067939}
   - component: {fileID: 1589401612516067938}
+  - component: {fileID: 4092797877399998611}
   m_Layer: 7
   m_Name: Sprite
   m_TagString: Untagged
@@ -179,3 +180,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4092797877399998611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1589401612516067948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7d2df32903c17f45a7ad729b960dace, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteComponent: {fileID: 1589401612516067938}
+  sprites:
+  - {fileID: 21300000, guid: dd6d990144b93634d9d5e9cb65482b3b, type: 3}
+  - {fileID: 21300000, guid: 086c88bb2700abb4eabca8d6bc8d3ff4, type: 3}
+  cycleTime: 0.1
+  cycleOnce: 0

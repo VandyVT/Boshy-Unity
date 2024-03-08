@@ -4,8 +4,8 @@ using System.Collections;
 public class CameraManager : MonoBehaviour
 {
     public GameObject playerObject;
-    public float moveAmountX = 13.15f;
-    public float moveAmountY = 10f;
+    [SerializeField] float moveAmountX = 13.14f;
+    [SerializeField] float moveAmountY = 10f; 
 
     private Transform cameraTransform;
     private Vector3 originalPosition;

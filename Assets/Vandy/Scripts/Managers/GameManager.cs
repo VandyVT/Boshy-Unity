@@ -56,8 +56,7 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F4))
         {
-            // Toggle fullscreen mode
-            Screen.fullScreen = !Screen.fullScreen;
+            ToggleFullscreen();
         }
 
         if (Input.GetKeyDown(KeyCode.F2))
@@ -65,6 +64,11 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene("scn_intro");
             Destroy(this.gameObject);
         }
+    }
+
+    private void ToggleFullscreen()
+    {
+        Screen.fullScreen = !Screen.fullScreen;
     }
 
     public void FindAllResetobjects()

@@ -10,6 +10,7 @@ public enum ResetOptions
     SaveInitialScale = 1 << 2,
     SaveAnimationState = 1 << 3,
     SaveTriggerState = 1 << 4,
+    SaveObjectActiveState = 1 << 5,
 }
 
 public class ResetCondition : MonoBehaviour
@@ -17,6 +18,9 @@ public class ResetCondition : MonoBehaviour
     private Vector3 initialPosition;
     private Quaternion initialRotation;
     private Vector3 initialScale;
+    private bool objectActiveState;
+
+    [SerializeField] GameObject targetObject;
     [SerializeField] Animation animationState;
     [SerializeField] TriggerEffect triggerEffect;
 
@@ -43,7 +47,12 @@ public class ResetCondition : MonoBehaviour
             {
                 animationState = GetComponent<Animation>();
             }
-        }; 
+        };
+
+        if ((resetOptions & ResetOptions.SaveObjectActiveState) != 0)
+        {
+            objectActiveState = targetObject.activeSelf;
+        };
     }
 
     public void ResetObjectState()
@@ -71,6 +80,11 @@ public class ResetCondition : MonoBehaviour
         if ((resetOptions & ResetOptions.SaveTriggerState) != 0)
         {
             triggerEffect.ResetToDefaultValues();
+        }
+
+        if ((resetOptions & ResetOptions.SaveObjectActiveState) != 0)
+        {
+            targetObject.SetActive(objectActiveState);
         }
     }
 }
