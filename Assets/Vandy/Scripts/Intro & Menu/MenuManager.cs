@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.IO;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class MenuManager : MonoBehaviour
 {
@@ -39,6 +40,10 @@ public class MenuManager : MonoBehaviour
 
     [SerializeField] GameObject loadingText;
 
+    [Header("Inputs")]
+    [SerializeField] InputActionReference submitAction;
+    [SerializeField] InputActionReference escapeAction;
+
     private void Start()
     {
         LightningStrike();
@@ -46,20 +51,32 @@ public class MenuManager : MonoBehaviour
         StartCoroutine(MOTD_Timer());
     }
 
+    private void OnEnable()
+    {
+        submitAction.action.Enable();
+        escapeAction.action.Enable();
+    }
+
+    private void OnDisable()
+    {
+        submitAction.action.Disable();
+        escapeAction.action.Disable();
+    }
+
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return) && introPlaying)
+        if (submitAction.action.triggered && introPlaying)
         {
             SkippedIntro();
         }
 
-        if (Input.GetKeyDown(KeyCode.Return) && !hasPressed)
+        if (submitAction.action.triggered && !hasPressed)
         {
             EnableMenu();
             hasPressed = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (escapeAction.action.triggered)
         {
             if(saveSelect.activeInHierarchy && !difficultySelect.activeInHierarchy)
             {

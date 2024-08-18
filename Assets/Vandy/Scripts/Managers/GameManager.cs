@@ -3,6 +3,7 @@ using UnityEngine;
 using SimpleJSON;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using UnityEditor.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,6 +20,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     private List<ResetCondition> resetConditions = new List<ResetCondition>();
+
+    [SerializeField] GameObject rendererPrefab;
+    [SerializeField] GameObject borderPrefab;
 
     private void Awake()
     {
@@ -42,6 +46,30 @@ public class GameManager : MonoBehaviour
         {
             LoadPlayerPosition();
         }
+
+        if (!RendererExists())
+        {
+            // Instantiate the prefab at the desired position and rotation
+            Instantiate(rendererPrefab, Vector3.zero, Quaternion.identity);
+        }
+
+        if (!BorderExists())
+        {
+            // Instantiate the prefab at the desired position and rotation
+            Instantiate(borderPrefab, Vector3.zero, Quaternion.identity);
+        }
+    }
+
+    bool RendererExists()
+    {
+        GameObject existingPrefab = GameObject.Find(rendererPrefab.name + "(Clone)");
+        return existingPrefab != null;
+    }
+
+    bool BorderExists()
+    {
+        GameObject existingPrefab = GameObject.Find(borderPrefab.name + "(Clone)");
+        return existingPrefab != null;
     }
 
     private void Update()
@@ -63,6 +91,18 @@ public class GameManager : MonoBehaviour
         {
             SceneManager.LoadScene("scn_intro");
             Destroy(this.gameObject);
+
+            if (RendererExists())
+            {
+                // Instantiate the prefab at the desired position and rotation
+                Destroy(GameObject.Find(rendererPrefab.name + "(Clone)"));
+            }
+
+            if (BorderExists())
+            {
+                // Instantiate the prefab at the desired position and rotation
+                Destroy(GameObject.Find(borderPrefab.name + "(Clone)"));
+            }
         }
     }
 

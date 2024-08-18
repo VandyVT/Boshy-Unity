@@ -47,10 +47,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fileName: playerPosition.json
   _gameOverMusic: {fileID: 5431040581844918816}
-  debugText: {fileID: 0}
   difficultyNumber: 0
   saveNumber: 0
   loadPositionOnStart: 0
+  isWarping: 0
+  rendererPrefab: {fileID: 4439611942796202551, guid: 3c053166b23fe0249a539be9fba0ad7a, type: 3}
+  borderPrefab: {fileID: 8341864321016577308, guid: 9e94d3da8abc0904ab8abad1f8c4ef33, type: 3}
 --- !u!1 &5431040581844918817
 GameObject:
   m_ObjectHideFlags: 0

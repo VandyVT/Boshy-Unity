@@ -66,7 +66,7 @@ public class PlayerCharacter : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        
+
         if (_rb == null)
         {
             if (isMenuAnimation) return;
@@ -140,7 +140,7 @@ public class PlayerCharacter : MonoBehaviour
             }
         }
 
-        else if(_rb.velocity.y < maxFallVelocity)
+        else if (_rb.velocity.y < maxFallVelocity)
         {
             _rb.velocity = new Vector3(_rb.velocity.x, maxFallVelocity);
         }
@@ -319,7 +319,7 @@ public class PlayerCharacter : MonoBehaviour
 
         return _playerDead;
     }
-    private bool bloodInstantiated = false; 
+    private bool bloodInstantiated = false;
 
     void OnPlayerDeath()
     {
@@ -339,7 +339,7 @@ public class PlayerCharacter : MonoBehaviour
         if (_bloodPrefab != null && !bloodInstantiated)
         {
             bloodInstance = Instantiate(_bloodPrefab, transform.position, transform.rotation);
-            bloodInstantiated = true; 
+            bloodInstantiated = true;
         }
 
         deathText.text = randomText;
