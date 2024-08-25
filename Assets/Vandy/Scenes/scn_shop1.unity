@@ -10230,6 +10230,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 457680665}
     m_Modifications:
+    - target: {fileID: 472274439547419734, guid: c40b6c30e89a60748b0a09668d47342a, type: 3}
+      propertyPath: m_ClearFlags
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 472274439674760504, guid: c40b6c30e89a60748b0a09668d47342a, type: 3}
       propertyPath: sceneCollectionObj
       value: 

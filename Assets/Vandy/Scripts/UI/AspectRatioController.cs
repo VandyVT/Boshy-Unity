@@ -9,11 +9,13 @@ public class AspectRatioController : MonoBehaviour
     void Start()
     {
         AdjustCanvas();
+        AdjustChildObjects();
     }
 
     void OnRectTransformDimensionsChange()
     {
         AdjustCanvas();
+        AdjustChildObjects();
     }
 
     void AdjustCanvas()
@@ -37,8 +39,6 @@ public class AspectRatioController : MonoBehaviour
             canvas.GetComponent<CanvasScaler>().matchWidthOrHeight = 1; // Match height
             canvas.GetComponent<RectTransform>().localScale = new Vector3(1, scaleFactor, 1);
         }
-
-        AdjustChildObjects();
     }
 
     void AdjustChildObjects()

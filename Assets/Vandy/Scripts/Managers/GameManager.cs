@@ -3,7 +3,6 @@ using UnityEngine;
 using SimpleJSON;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
-using UnityEditor.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,6 +15,7 @@ public class GameManager : MonoBehaviour
 
     public bool loadPositionOnStart;
     public bool isWarping = false;
+    private bool cameFromMainMenu = false;
 
     public static GameManager Instance;
 
@@ -58,6 +58,12 @@ public class GameManager : MonoBehaviour
             // Instantiate the prefab at the desired position and rotation
             Instantiate(borderPrefab, Vector3.zero, Quaternion.identity);
         }
+
+        string previousScene = PlayerPrefs.GetString("PreviousScene", "");
+        if (previousScene == "scn_mainMenu")
+        {
+            cameFromMainMenu = true;
+        }
     }
 
     bool RendererExists()
@@ -82,33 +88,70 @@ public class GameManager : MonoBehaviour
             ResetTheme();
         }
 
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            ResetGame();
+        }
+
         if (Input.GetKeyDown(KeyCode.F4))
         {
             ToggleFullscreen();
         }
 
-        if (Input.GetKeyDown(KeyCode.F2))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            SceneManager.LoadScene("scn_intro");
-            Destroy(this.gameObject);
+            string currentSceneName = SceneManager.GetActiveScene().name;
 
-            if (RendererExists())
+            if (currentSceneName == "scn_mainMenu")
             {
-                // Instantiate the prefab at the desired position and rotation
-                Destroy(GameObject.Find(rendererPrefab.name + "(Clone)"));
+                return;
             }
 
-            if (BorderExists())
+            else if (currentSceneName == "scn_options")
             {
-                // Instantiate the prefab at the desired position and rotation
-                Destroy(GameObject.Find(borderPrefab.name + "(Clone)"));
+                if (cameFromMainMenu)
+                {
+                    ResetGame();
+                }
+                else
+                {
+                    LoadPlayerPosition();
+                }
             }
+            else
+            {
+                PlayerPrefs.SetString("PreviousScene", currentSceneName);
+                SceneManager.LoadScene("scn_options");
+            }
+        }
+    }
+
+    void ResetGame()
+    {
+        SceneManager.LoadScene("scn_intro");
+        Destroy(this.gameObject);
+
+        if (RendererExists())
+        {
+            // Instantiate the prefab at the desired position and rotation
+            Destroy(GameObject.Find(rendererPrefab.name + "(Clone)"));
+        }
+
+        if (BorderExists())
+        {
+            // Instantiate the prefab at the desired position and rotation
+            Destroy(GameObject.Find(borderPrefab.name + "(Clone)"));
         }
     }
 
     private void ToggleFullscreen()
     {
         Screen.fullScreen = !Screen.fullScreen;
+    }
+
+    public void ToggleOptionsFromMenu(bool Toggle)
+    {
+        cameFromMainMenu = Toggle;
     }
 
     public void FindAllResetobjects()
@@ -170,6 +213,8 @@ public class GameManager : MonoBehaviour
 
     public void LoadPlayerPosition()
     {
+        ToggleOptionsFromMenu(false);
+
         // Get the file path in StreamingAssets
         string filePath = (Application.persistentDataPath + "/playerData" + saveNumber + ".json");
 
@@ -192,7 +237,10 @@ public class GameManager : MonoBehaviour
                 // Load the saved scene before proceeding to load data
                 loadPositionOnStart = true;
                 resetConditions.Clear();
-                PlayerCharacter.instance.StopPlayerAudio();
+                if (PlayerCharacter.instance != null)
+                {
+                    PlayerCharacter.instance.StopPlayerAudio();
+                }
                 SceneManager.LoadScene(savedSceneName);
             }
 
@@ -201,12 +249,15 @@ public class GameManager : MonoBehaviour
             float y = playerData["position"]["y"].AsFloat;
 
             // Set player position
-            if (savedSceneName == currentSceneName)
+            if (savedSceneName == currentSceneName && PlayerCharacter.instance != null)
             {
                 PlayerCharacter.instance.lastSavedPostion = new Vector2(x, y);
             }
 
-            Debug.Log("Player position loaded: " + PlayerCharacter.instance.transform.position);
+            if (PlayerCharacter.instance != null)
+            {
+                Debug.Log("Player position loaded: " + PlayerCharacter.instance.transform.position);
+            }
 
             Invoke("PositionOnStartResetDelay", 1);
         }

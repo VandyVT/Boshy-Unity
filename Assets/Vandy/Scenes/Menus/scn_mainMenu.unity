@@ -1815,6 +1815,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &222335100 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5431040580983073441, guid: ecfa3c434e541b14a96a73296a4d6f2f, type: 3}
+  m_PrefabInstance: {fileID: 860564266}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcd6eaeddf3262b4ba4a937657c61688, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &226005313
 GameObject:
   m_ObjectHideFlags: 0
@@ -2068,6 +2079,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 222335100}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: ToggleOptionsFromMenu
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
       - m_Target: {fileID: 420007537}
         m_TargetAssemblyTypeName: BufferedEvent, Assembly-CSharp
         m_MethodName: TriggerInstantly
