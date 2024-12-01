@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (PlayerInputs.instance.resetAction.triggered)
         {
             PlayerCharacter.instance.Restart();
             PlayerUiManager.instance.gameOver.SetActive(false);
@@ -98,7 +98,7 @@ public class GameManager : MonoBehaviour
             ToggleFullscreen();
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (PlayerInputs.instance.optionsAction.triggered)
         {
             string currentSceneName = SceneManager.GetActiveScene().name;
 

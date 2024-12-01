@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerInputs))]
 public class PlayerCharacter : MonoBehaviour
 {
     [SerializeField] bool isMenuAnimation;
@@ -56,12 +57,16 @@ public class PlayerCharacter : MonoBehaviour
     bool onVine;
     bool djump;
     bool grounded;
+    bool isJumping;
 
+    private PlayerInputs _inputs;
     Rigidbody2D _rb;
     [HideInInspector] public Vector2 lastSavedPostion;
 
     public static PlayerCharacter instance;
     private List<GameObject> bullets = new List<GameObject>();
+
+    private Vector2 moveInput;
 
     private void Awake()
     {
@@ -104,12 +109,12 @@ public class PlayerCharacter : MonoBehaviour
     {
         if (isMenuAnimation || GameManager.Instance.isWarping) return;
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (PlayerInputs.instance.killAction.triggered)
         {
             PlayerDead();
         }
 
-        if (Input.GetKeyDown(KeyCode.X))
+        if (PlayerInputs.instance.shootAction.triggered)
         {
             Shoot();
         }
@@ -149,7 +154,7 @@ public class PlayerCharacter : MonoBehaviour
     void UpdateAnimation()
     {
         // Check if the "Walk" animation bool should be true
-        bool isWalking = Mathf.Abs(Input.GetAxis("Horizontal")) > 0;
+        bool isWalking = Mathf.Abs(PlayerInputs.instance.movementVector.x) > 0;
 
         // Set the "Walk" animation bool in the Animator
         WalkAnimation(isWalking);
@@ -165,7 +170,7 @@ public class PlayerCharacter : MonoBehaviour
 
     void Move()
     {
-        float moveInput = Input.GetAxis("Horizontal");
+        float moveInput = PlayerInputs.instance.movementVector.x;
 
         if (moveInput != 0)
         {
@@ -185,7 +190,7 @@ public class PlayerCharacter : MonoBehaviour
         }
         else if (_rb.velocity.x < -1)
         {
-            // If the velocity is negative, flip the object along the X-axis
+            // If the velocity is negative, flip the object along the X-axis to make the player face left
             transform.localScale = new Vector3(-1f, 1f, 1f);
         }
     }
@@ -200,32 +205,41 @@ public class PlayerCharacter : MonoBehaviour
 
         if (grounded)
         {
-            djump = true;
+            djump = true;  // Reset double jump if grounded
         }
 
-        if (Input.GetKeyDown(KeyCode.Z))
+        // Check if the jump button is being held
+        bool jumpHeld = PlayerInputs.instance.jumpAction.ReadValue<float>() > 0.1f;
+
+        // Handle the initial jump when grounded or on a platform
+        if (grounded && jumpHeld && !isJumping)
         {
-            if (grounded || onPlatform || Physics2D.Raycast(transform.position, Vector2.down, 0.25f, LayerMask.GetMask("Water")))
-            {
-                // First jump
-                PlaySound("jump1");
-
-                float jumpForce = jumpCurve;
-                _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
-            }
-
-            else if (djump || Physics2D.Raycast(transform.position, Vector2.down, 0.25f, LayerMask.GetMask("Water2")))
-            {
-                // Double jump
-                PlaySound("jump2");
-
-                float jump2Force = jump2Curve;
-                _rb.velocity = new Vector2(_rb.velocity.x, jump2Force);
-                djump = false;
-            }
+            // First jump
+            PlaySound("jump1");
+            isJumping = true;  // Prevent double jump from being triggered immediately
+            float jumpForce = jumpCurve;
+            _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
         }
 
-        if (Input.GetKeyUp(KeyCode.Z) && _rb.velocity.y > 0)
+        // Handle double jump (only if the button is released before the second jump)
+        else if (!grounded && jumpHeld && djump && !isJumping)
+        {
+            // Double jump
+            PlaySound("jump2");
+            float jump2Force = jump2Curve;
+            _rb.velocity = new Vector2(_rb.velocity.x, jump2Force);
+            djump = false; // Disable double jump after use
+            isJumping = true;
+        }
+
+        // If the jump button is released, reset the jumping state to allow double jump later
+        if (!jumpHeld)
+        {
+            isJumping = false;
+        }
+
+        // Handle falling logic (clamp the fall speed)
+        if (_rb.velocity.y > 0 && !jumpHeld)
         {
             float maxFallSpeed = 5.0f;
             _rb.velocity = new Vector2(_rb.velocity.x, Mathf.Clamp(_rb.velocity.y, 0, maxFallSpeed));
@@ -237,7 +251,7 @@ public class PlayerCharacter : MonoBehaviour
         djump = true;
     }
 
-    void Shoot()
+    public void Shoot()
     {
         if (bullets.Count < maxBullets)
         {
@@ -308,7 +322,7 @@ public class PlayerCharacter : MonoBehaviour
         }
     }
 
-    bool PlayerDead()
+    public bool PlayerDead()
     {
         if (_playerDead == false)
         {

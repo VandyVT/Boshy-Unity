@@ -4,80 +4,115 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Canvas))]
 public class AspectRatioController : MonoBehaviour
 {
-    public Canvas canvas;
+    private const float TargetAspectRatio = 4.0f / 3.0f;
+    private Canvas canvas;
+    private RectTransform canvasRectTransform;
 
-    void Start()
+    private bool roomStart = true;
+
+    private void Awake()
+    {
+        GetCanvasComponents();
+    }
+
+    private void Start()
     {
         AdjustCanvas();
         AdjustChildObjects();
+
+        roomStart = false;
     }
 
-    void OnRectTransformDimensionsChange()
+    private void OnRectTransformDimensionsChange()
     {
-        AdjustCanvas();
-        AdjustChildObjects();
-    }
-
-    void AdjustCanvas()
-    {
-        // The aspect ratio to maintain
-        float targetAspectRatio = 4.0f / 3.0f;
-
-        // Get the current screen's aspect ratio
-        float screenAspectRatio = (float)Screen.width / Screen.height;
-
-        // Calculate the scale factor based on the aspect ratio difference
-        if (screenAspectRatio >= targetAspectRatio)
+        if (canvasRectTransform != null)
         {
-            float scaleFactor = targetAspectRatio / screenAspectRatio;
-            canvas.GetComponent<CanvasScaler>().matchWidthOrHeight = 0; // Match width
-            canvas.GetComponent<RectTransform>().localScale = new Vector3(scaleFactor, 1, 1);
-        }
-        else
-        {
-            float scaleFactor = screenAspectRatio / targetAspectRatio;
-            canvas.GetComponent<CanvasScaler>().matchWidthOrHeight = 1; // Match height
-            canvas.GetComponent<RectTransform>().localScale = new Vector3(1, scaleFactor, 1);
+            AdjustCanvas();
+
+            if (roomStart) return;
+            AdjustChildObjects();
         }
     }
 
-    void AdjustChildObjects()
+    private void GetCanvasComponents()
     {
-        // The aspect ratio you want to maintain
-        float targetAspectRatio = 4.0f / 3.0f;
+        canvas = GetComponent<Canvas>();
 
-        // Get the current screen's aspect ratio
+        // If not found on the same GameObject, search in children
+        if (canvas == null)
+        {
+            canvas = GetComponentInChildren<Canvas>();
+        }
+
+        // Attempt to get RectTransform only if Canvas exists
+        if (canvas != null)
+        {
+            canvasRectTransform = canvas.GetComponent<RectTransform>();
+        }
+
+        // Log errors for missing components
+        if (canvas == null)
+        {
+            Debug.LogError("AspectRatioController: Canvas not found. Ensure this script is attached to the Canvas GameObject or its parent.");
+        }
+        if (canvasRectTransform == null)
+        {
+            Debug.LogError("AspectRatioController: RectTransform not found. Ensure the Canvas GameObject has a RectTransform component.");
+        }
+    }
+
+    private void AdjustCanvas()
+    {
+        if (canvasRectTransform == null) return;
+
         float screenAspectRatio = (float)Screen.width / Screen.height;
 
-        // Calculate the Y scale adjustment based on the aspect ratio difference
-        float yScale = targetAspectRatio / screenAspectRatio;
-
-        // Iterate through each child of the canvas and adjust its scale
-        foreach (RectTransform child in canvas.GetComponent<RectTransform>())
+        if (Mathf.Approximately(screenAspectRatio, TargetAspectRatio))
         {
-            // Ignore the child named "Game Renderer"
-            if (child.name == "Game Renderer")
-                continue;
+            canvasRectTransform.localScale = Vector3.one;
+            canvasRectTransform.sizeDelta = Vector2.zero;
+            return;
+        }
 
-            if (child.name == "Vignette")
-                continue;
+        float scaleFactor = (screenAspectRatio > TargetAspectRatio)
+            ? TargetAspectRatio / screenAspectRatio
+            : screenAspectRatio / TargetAspectRatio;
 
-            // Set the scale of child objects to maintain their proportions
-            if (screenAspectRatio == targetAspectRatio)
-            {
-                // If the screen is exactly 4:3, keep the scale at 1
-                child.localScale = Vector3.one;
-            }
-            else if (screenAspectRatio > targetAspectRatio)
-            {
-                // If the screen is wider than 4:3, adjust Y scale only
-                child.localScale = new Vector3(1, yScale, 1);
-            }
-            else
-            {
-                // If the screen is taller than 4:3, adjust X scale only
-                child.localScale = new Vector3(yScale, 1, 1);
-            }
+        canvasRectTransform.localScale = screenAspectRatio > TargetAspectRatio
+            ? new Vector3(scaleFactor, 1, 1)
+            : new Vector3(1, scaleFactor, 1);
+
+        canvasRectTransform.anchoredPosition = Vector2.zero;
+    }
+
+    private void AdjustChildObjects()
+    {
+        if (canvasRectTransform == null) return;
+
+        float screenAspectRatio = (float)Screen.width / Screen.height;
+        float xScale = (screenAspectRatio > TargetAspectRatio) ? 1 : screenAspectRatio / TargetAspectRatio;
+        float yScale = (screenAspectRatio > TargetAspectRatio) ? TargetAspectRatio / screenAspectRatio : 1;
+
+        foreach (RectTransform child in canvasRectTransform)
+        {
+            if (child.name == "Game Renderer" || child.name == "Vignette") continue;
+
+            // Reset local scale to avoid accumulation errors
+            child.localScale = Vector3.one;
+
+            // Calculate new position based on pivot
+            Vector2 pivotOffset = new Vector2(
+                (child.pivot.x - 0.5f) * child.rect.width * (xScale - 1),
+                (child.pivot.y - 0.5f) * child.rect.height * (yScale - 1)
+            );
+
+            Vector2 adjustedPosition = new Vector2(
+                child.anchoredPosition.x * xScale + pivotOffset.x,
+                child.anchoredPosition.y * yScale + pivotOffset.y
+            );
+
+            child.anchoredPosition = adjustedPosition;
+            child.localScale = new Vector3(xScale, yScale, 1);
         }
     }
 }
