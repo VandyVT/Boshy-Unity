@@ -100,6 +100,7 @@ public class GameManager : MonoBehaviour
 
         if (PlayerInputs.instance.optionsAction.triggered)
         {
+            if (isWarping) return;
             string currentSceneName = SceneManager.GetActiveScene().name;
 
             if (currentSceneName == "scn_mainMenu")

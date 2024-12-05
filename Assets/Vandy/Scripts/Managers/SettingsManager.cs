@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.UI;
+using TMPro;
 
 public class SettingsManager : MonoBehaviour
 {
     Resolution[] resolutions;
 
-    public Dropdown resolutionDropdown;
+    public TMP_Dropdown resolutionDropdown;
 
     void Start()
     {
