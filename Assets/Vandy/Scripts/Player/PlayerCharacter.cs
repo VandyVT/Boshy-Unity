@@ -77,12 +77,6 @@ public class PlayerCharacter : MonoBehaviour
             if (isMenuAnimation) return;
             _rb = GetComponent<Rigidbody2D>();
         }
-
-        if (GameManager.Instance.loadPositionOnStart)
-        {
-            _playerAudio.Stop();
-            Restart();
-        }
     }
 
     void Start()
@@ -99,6 +93,12 @@ public class PlayerCharacter : MonoBehaviour
 
             _playerAudio.pitch = randomSpeed;
             _playerAudio.PlayOneShot(_introClip);
+        }
+
+        if (GameManager.Instance.loadPositionOnStart)
+        {
+            _playerAudio.Stop();
+            Restart();
         }
 
         GameManager.Instance.FindAllResetobjects();
@@ -131,23 +131,23 @@ public class PlayerCharacter : MonoBehaviour
 
         if (onWater)
         {
-            if (_rb.velocity.y < waterFallVelocity)
+            if (_rb.linearVelocity.y < waterFallVelocity)
             {
-                _rb.velocity = new Vector3(_rb.velocity.x, waterFallVelocity);
+                _rb.linearVelocity = new Vector3(_rb.linearVelocity.x, waterFallVelocity);
             }
         }
 
         if (onVine)
         {
-            if (_rb.velocity.y < vineFallVelocity)
+            if (_rb.linearVelocity.y < vineFallVelocity)
             {
-                _rb.velocity = new Vector3(_rb.velocity.x, vineFallVelocity);
+                _rb.linearVelocity = new Vector3(_rb.linearVelocity.x, vineFallVelocity);
             }
         }
 
-        else if (_rb.velocity.y < maxFallVelocity)
+        else if (_rb.linearVelocity.y < maxFallVelocity)
         {
-            _rb.velocity = new Vector3(_rb.velocity.x, maxFallVelocity);
+            _rb.linearVelocity = new Vector3(_rb.linearVelocity.x, maxFallVelocity);
         }
     }
 
@@ -160,8 +160,8 @@ public class PlayerCharacter : MonoBehaviour
         WalkAnimation(isWalking);
 
         // Check if the player is jumping or falling
-        bool isJumping = _rb.velocity.y > 0;
-        bool isFalling = _rb.velocity.y < 0;
+        bool isJumping = _rb.linearVelocity.y > 0;
+        bool isFalling = _rb.linearVelocity.y < 0;
 
         // Set the "Jump" and "Fall" animation bools in the Animator
         JumpAnimation(isJumping);
@@ -174,21 +174,21 @@ public class PlayerCharacter : MonoBehaviour
 
         if (moveInput != 0)
         {
-            _rb.velocity = new Vector2(moveSpeed * Mathf.Sign(moveInput), _rb.velocity.y);
+            _rb.linearVelocity = new Vector2(moveSpeed * Mathf.Sign(moveInput), _rb.linearVelocity.y);
         }
 
         else if (moveInput == 0)
         {
             // Stop the player when no input is detected
-            _rb.velocity = new Vector2(0, _rb.velocity.y);
+            _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
         }
 
-        if (_rb.velocity.x >= 1)
+        if (_rb.linearVelocity.x >= 1)
         {
             // If the velocity is positive or zero, keep the original scale
             transform.localScale = new Vector3(1f, 1f, 1f);
         }
-        else if (_rb.velocity.x < -1)
+        else if (_rb.linearVelocity.x < -1)
         {
             // If the velocity is negative, flip the object along the X-axis to make the player face left
             transform.localScale = new Vector3(-1f, 1f, 1f);
@@ -218,7 +218,7 @@ public class PlayerCharacter : MonoBehaviour
             PlaySound("jump1");
             isJumping = true;  // Prevent double jump from being triggered immediately
             float jumpForce = jumpCurve;
-            _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
+            _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, jumpForce);
         }
 
         // Handle double jump (only if the button is released before the second jump)
@@ -227,7 +227,7 @@ public class PlayerCharacter : MonoBehaviour
             // Double jump
             PlaySound("jump2");
             float jump2Force = jump2Curve;
-            _rb.velocity = new Vector2(_rb.velocity.x, jump2Force);
+            _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, jump2Force);
             djump = false; // Disable double jump after use
             isJumping = true;
         }
@@ -239,10 +239,10 @@ public class PlayerCharacter : MonoBehaviour
         }
 
         // Handle falling logic (clamp the fall speed)
-        if (_rb.velocity.y > 0 && !jumpHeld)
+        if (_rb.linearVelocity.y > 0 && !jumpHeld)
         {
             float maxFallSpeed = 5.0f;
-            _rb.velocity = new Vector2(_rb.velocity.x, Mathf.Clamp(_rb.velocity.y, 0, maxFallSpeed));
+            _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Clamp(_rb.linearVelocity.y, 0, maxFallSpeed));
         }
     }
 
@@ -262,7 +262,7 @@ public class PlayerCharacter : MonoBehaviour
 
             float direction = transform.localScale.x;
 
-            bulletRb.velocity = new Vector2(direction, 0) * bulletSpeed;
+            bulletRb.linearVelocity = new Vector2(direction, 0) * bulletSpeed;
 
             Destroy(bullet, bulletLifetime);
 
@@ -420,7 +420,7 @@ public class PlayerCharacter : MonoBehaviour
         _playerSprite.SetActive(true);
         this.GetComponent<BoxCollider2D>().enabled = true;
         _rb.bodyType = RigidbodyType2D.Dynamic;
-        _rb.velocity = Vector2.zero;
+        _rb.linearVelocity = Vector2.zero;
 
         PlayerCharacter playerScript = this.GetComponent<PlayerCharacter>();
         playerScript.enabled = true;
@@ -458,7 +458,7 @@ public class PlayerCharacter : MonoBehaviour
     {
         if (collision.name == ("Speed Forward"))
         {
-            _rb.velocity = new Vector2(moveSpeed, _rb.velocity.y);
+            _rb.linearVelocity = new Vector2(moveSpeed, _rb.linearVelocity.y);
         }
 
         if (collision.name == ("Water"))

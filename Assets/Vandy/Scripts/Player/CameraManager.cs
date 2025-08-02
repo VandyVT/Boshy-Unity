@@ -4,8 +4,10 @@ using System.Collections;
 public class CameraManager : MonoBehaviour
 {
     public GameObject playerObject;
+
     [SerializeField] float moveAmountX = 13.14f;
-    [SerializeField] float moveAmountY = 10f; 
+    [SerializeField] float moveAmountY = 10f;
+    [SerializeField] float tolerance = 1f; // this is now in WORLD UNITS
 
     private Transform cameraTransform;
     private Vector3 originalPosition;
@@ -27,50 +29,56 @@ public class CameraManager : MonoBehaviour
     {
         if (playerObject != null)
         {
-            Vector2 objectPosition = Camera.main.WorldToViewportPoint(playerObject.transform.position);
-
-            if (objectPosition.x < 0 || objectPosition.x > 1 || objectPosition.y < 0 || objectPosition.y > 1)
-            {
-                MoveCamera(objectPosition);
-            }
+            CheckPlayerBoundsAndMove();
         }
     }
 
-    void MoveCamera(Vector3 objectPosition)
+    void CheckPlayerBoundsAndMove()
     {
-        Vector3 cameraPosition = transform.position;
+        Vector3 playerPos = playerObject.transform.position;
+        Vector3 camPos = transform.position;
 
-        if (objectPosition.x < 0)
+        float camHeight = Camera.main.orthographicSize;
+        float camWidth = camHeight * Camera.main.aspect;
+
+        float leftBound = camPos.x - camWidth - tolerance;
+        float rightBound = camPos.x + camWidth + tolerance;
+        float bottomBound = camPos.y - camHeight - tolerance;
+        float topBound = camPos.y + camHeight + tolerance;
+
+        bool moved = false;
+
+        if (playerPos.x < leftBound)
         {
-            cameraPosition.x -= moveAmountX;
+            camPos.x -= moveAmountX;
+            moved = true;
         }
-        else if (objectPosition.x > 1)
+        else if (playerPos.x > rightBound)
         {
-            cameraPosition.x += moveAmountX;
+            camPos.x += moveAmountX;
+            moved = true;
         }
 
-        if (objectPosition.y < 0)
+        if (playerPos.y < bottomBound)
         {
-            cameraPosition.y -= moveAmountY;
+            camPos.y -= moveAmountY;
+            moved = true;
         }
-        else if (objectPosition.y > 1)
+        else if (playerPos.y > topBound)
         {
-            cameraPosition.y += moveAmountY;
+            camPos.y += moveAmountY;
+            moved = true;
         }
 
-        transform.position = cameraPosition;
+        if (moved)
+            transform.position = camPos;
     }
 
     public void Shake(float shakeAmountX, float shakeAmountY, float duration)
     {
         if (playerObject != null)
         {
-            Vector2 objectPosition = Camera.main.WorldToViewportPoint(playerObject.transform.position);
-
-            if (objectPosition.x < 0 || objectPosition.x > 1 || objectPosition.y < 0 || objectPosition.y > 1)
-            {
-                MoveCamera(objectPosition);
-            }
+            CheckPlayerBoundsAndMove();
         }
 
         originalPosition = cameraTransform.position;
@@ -96,7 +104,6 @@ public class CameraManager : MonoBehaviour
             yield return null;
         }
 
-        // Return the camera to its original position
         cameraTransform.position = originalPosition;
     }
 }

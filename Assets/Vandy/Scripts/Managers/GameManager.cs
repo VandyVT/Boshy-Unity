@@ -192,6 +192,12 @@ public class GameManager : MonoBehaviour
         _gameOverMusic.Play();
     }
 
+    public void DeleteSaveFile()
+    {
+        string filePath = (Application.persistentDataPath + "/playerData" + saveNumber + ".json");
+        File.Delete(filePath);
+    }
+
     public void SavePlayerPosition()
     {
         // Create JSON object

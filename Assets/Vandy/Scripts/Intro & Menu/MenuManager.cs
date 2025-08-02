@@ -32,6 +32,9 @@ public class MenuManager : MonoBehaviour
     [SerializeField] GameObject saveSelect;
     [SerializeField] Button lastSelectedSave;
 
+    [SerializeField] GameObject deleteSave;
+    [SerializeField] Button dontDeleteButton;
+
     [SerializeField] GameObject difficultySelect;
     [SerializeField] Button hardOnButton;
 
@@ -43,6 +46,7 @@ public class MenuManager : MonoBehaviour
     [Header("Inputs")]
     [SerializeField] InputActionReference submitAction;
     [SerializeField] InputActionReference escapeAction;
+    [SerializeField] InputActionReference deleteAction;
 
     private void Start()
     {
@@ -55,12 +59,14 @@ public class MenuManager : MonoBehaviour
     {
         submitAction.action.Enable();
         escapeAction.action.Enable();
+        deleteAction.action.Enable();
     }
 
     private void OnDisable()
     {
         submitAction.action.Disable();
         escapeAction.action.Disable();
+        deleteAction.action.Disable();
     }
 
     void Update()
@@ -94,12 +100,23 @@ public class MenuManager : MonoBehaviour
             }
         }
 
+        if (deleteAction.action.triggered)
+        {
+            if (saveSelect.activeSelf)
+            {
+                deleteSave.SetActive(true);
+                dontDeleteButton.Select();
+                saveSelect.SetActive(false);
+            }
+        }
+
         // Check if the animation has finished playing
         if (!boshy_Animation.isPlaying && introPlaying)
         {
             introPlaying = false;
             title_Animation.Play();
             press_Start.SetActive(true);
+            boshy_Animation.Stop();
             Debug.Log("Animation Finished Playing");
         }
     }
@@ -209,6 +226,11 @@ public class MenuManager : MonoBehaviour
                 button.interactable = setTo;
             }
         }
+    }
+
+    public void DeleteSaveFile()
+    {
+        GameManager.Instance.DeleteSaveFile();
     }
 
     public void SetAsLastSelect(Button self)
